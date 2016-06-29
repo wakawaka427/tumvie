@@ -110,6 +110,7 @@ public class CallbackActivity extends AppCompatActivity {
                             break;
                         }
                         // TODO：ダッシュボードの続きを取得する方法は？
+                        // TODO：RequestBuilder自前で用意したらいけるかも
 
                         subscriber.onCompleted();
                     }
