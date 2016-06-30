@@ -4,23 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.MediaCodec;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.exoplayer.ExoPlayer;
-import com.google.android.exoplayer.MediaCodecAudioTrackRenderer;
-import com.google.android.exoplayer.MediaCodecSelector;
-import com.google.android.exoplayer.MediaCodecVideoTrackRenderer;
-import com.google.android.exoplayer.extractor.ExtractorSampleSource;
-import com.google.android.exoplayer.upstream.Allocator;
-import com.google.android.exoplayer.upstream.DataSource;
-import com.google.android.exoplayer.upstream.DefaultAllocator;
-import com.google.android.exoplayer.upstream.DefaultUriDataSource;
 import com.tumblr.jumblr.JumblrClient;
 import com.tumblr.jumblr.request.RequestBuilder;
 import com.tumblr.jumblr.types.Photo;
@@ -39,6 +30,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jp.co.wakawaka.tumvie.player.DemoPlayer;
+import jp.co.wakawaka.tumvie.player.ExtractorRendererBuilder;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
@@ -131,23 +124,34 @@ public class CallbackActivity extends AppCompatActivity {
                         // 処理内で例外が発生すると自動的にonErrorが呼ばれる
                     }
                     @Override
-                    public void onNext(String str) {
-                        Context context = CallbackActivity.this.getApplicationContext();
-
-                        Allocator allocator = new DefaultAllocator(256); // TODO：引数適当
-                        DataSource dataSource = new DefaultUriDataSource(context, null, "userAgent");
-                        ExtractorSampleSource sampleSource = new ExtractorSampleSource(
-                                Uri.parse("http://html5demos.com/assets/dizzy.mp4"), dataSource, allocator, 64 * 1024); // TODO：引数適当
-                        MediaCodecVideoTrackRenderer videoRenderer = new MediaCodecVideoTrackRenderer(
-                                context, sampleSource, MediaCodecSelector.DEFAULT, MediaCodec.VIDEO_SCALING_MODE_SCALE_TO_FIT);
-                        MediaCodecAudioTrackRenderer audioRenderer = new MediaCodecAudioTrackRenderer(
-                                sampleSource, MediaCodecSelector.DEFAULT);
-
+                    public void onNext(final String str) {
                         SurfaceView surface = (SurfaceView) findViewById(R.id.surface);
-                        ExoPlayer player = ExoPlayer.Factory.newInstance(2);
-                        player.prepare(videoRenderer, audioRenderer);
-                        player.sendMessage(videoRenderer, MediaCodecVideoTrackRenderer.MSG_SET_SURFACE, surface);
-                        player.setPlayWhenReady(true);
+                        surface.getHolder().addCallback(new SurfaceHolder.Callback() {
+                            @Override
+                            public void surfaceCreated(SurfaceHolder surfaceHolder) {
+                                DemoPlayer player = new DemoPlayer(
+                                        new ExtractorRendererBuilder(
+                                                CallbackActivity.this.getApplicationContext()
+                                                , "userAgent"
+                                                , Uri.parse(str))
+                                );
+                                player.setSurface(surfaceHolder.getSurface());
+                                player.prepare();
+                                player.setPlayWhenReady(true);
+                            }
+                            @Override
+                            public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
+                                DemoPlayer player = new DemoPlayer(
+                                        new ExtractorRendererBuilder(
+                                                CallbackActivity.this.getApplicationContext()
+                                                , "userAgent"
+                                                , Uri.parse(str))
+                                );
+                            }
+                            @Override
+                            public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
+                            }
+                        });
                     }
                 });
     }
