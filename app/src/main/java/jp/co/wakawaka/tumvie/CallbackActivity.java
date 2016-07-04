@@ -4,13 +4,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.TextureView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.tumblr.jumblr.JumblrClient;
 import com.tumblr.jumblr.request.RequestBuilder;
@@ -125,33 +129,60 @@ public class CallbackActivity extends AppCompatActivity {
                     }
                     @Override
                     public void onNext(final String str) {
-                        SurfaceView surface = (SurfaceView) findViewById(R.id.surface);
-                        surface.getHolder().addCallback(new SurfaceHolder.Callback() {
+                        final VideoView video = (VideoView) findViewById(R.id.video);
+                        if (video == null) {
+                            return;
+                        }
+                        video.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                             @Override
-                            public void surfaceCreated(SurfaceHolder surfaceHolder) {
-                                DemoPlayer player = new DemoPlayer(
-                                        new ExtractorRendererBuilder(
-                                                CallbackActivity.this.getApplicationContext()
-                                                , "userAgent"
-                                                , Uri.parse(str))
-                                );
-                                player.setSurface(surfaceHolder.getSurface());
-                                player.prepare();
-                                player.setPlayWhenReady(true);
-                            }
-                            @Override
-                            public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
-                                DemoPlayer player = new DemoPlayer(
-                                        new ExtractorRendererBuilder(
-                                                CallbackActivity.this.getApplicationContext()
-                                                , "userAgent"
-                                                , Uri.parse(str))
-                                );
-                            }
-                            @Override
-                            public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
+                            public void onPrepared(MediaPlayer mp) {
+                                mp.start();
                             }
                         });
+                        video.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                            @Override
+                            public void onCompletion(MediaPlayer mp) {
+                                video.setVideoURI(Uri.parse("http://www.htmq.com/html5/sample/sample.mp4"));
+                            }
+                        });
+                        video.setVideoURI(Uri.parse(str));
+//                        TextureView texture = (TextureView) findViewById(R.id.texture);
+//                        DemoPlayer player = new DemoPlayer(
+//                                new ExtractorRendererBuilder(
+//                                        CallbackActivity.this.getApplicationContext()
+//                                        , "userAgent"
+//                                        , Uri.parse(str))
+//                        );
+//                        player.setSurface(new Surface(texture.getSurfaceTexture()));
+//                        player.prepare();
+//                        player.setPlayWhenReady(true);
+//                        SurfaceView surface = (SurfaceView) findViewById(R.id.surface);
+//                        surface.getHolder().addCallback(new SurfaceHolder.Callback() {
+//                            @Override
+//                            public void surfaceCreated(SurfaceHolder surfaceHolder) {
+//                                DemoPlayer player = new DemoPlayer(
+//                                        new ExtractorRendererBuilder(
+//                                                CallbackActivity.this.getApplicationContext()
+//                                                , "userAgent"
+//                                                , Uri.parse(str))
+//                                );
+//                                player.setSurface(surfaceHolder.getSurface());
+//                                player.prepare();
+//                                player.setPlayWhenReady(true);
+//                            }
+//                            @Override
+//                            public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
+//                                DemoPlayer player = new DemoPlayer(
+//                                        new ExtractorRendererBuilder(
+//                                                CallbackActivity.this.getApplicationContext()
+//                                                , "userAgent"
+//                                                , Uri.parse(str))
+//                                );
+//                            }
+//                            @Override
+//                            public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
+//                            }
+//                        });
                     }
                 });
     }
