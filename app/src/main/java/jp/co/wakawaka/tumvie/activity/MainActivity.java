@@ -1,4 +1,4 @@
-package jp.co.wakawaka.tumvie;
+package jp.co.wakawaka.tumvie.activity;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -7,6 +7,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
+
+import jp.co.wakawaka.tumvie.BuildConfig;
+import jp.co.wakawaka.tumvie.R;
+import jp.co.wakawaka.tumvie.Token;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -38,7 +42,8 @@ public class MainActivity extends AppCompatActivity {
     View.OnClickListener rightnowOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Toast.makeText(MainActivity.this, "coming soon!", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(MainActivity.this, ListActivity.class);
+            startActivity(intent);
         }
     };
 }

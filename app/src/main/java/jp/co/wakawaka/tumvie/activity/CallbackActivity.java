@@ -1,6 +1,5 @@
-package jp.co.wakawaka.tumvie;
+package jp.co.wakawaka.tumvie.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,10 +7,6 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Surface;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
-import android.view.TextureView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.VideoView;
@@ -34,8 +29,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jp.co.wakawaka.tumvie.player.DemoPlayer;
-import jp.co.wakawaka.tumvie.player.ExtractorRendererBuilder;
+import jp.co.wakawaka.tumvie.BuildConfig;
+import jp.co.wakawaka.tumvie.R;
+import jp.co.wakawaka.tumvie.Token;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
