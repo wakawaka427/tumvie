@@ -29,7 +29,9 @@
                 <data android:scheme="tumblrclient" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.ListActivity"></activity>
+        <activity android:name=".activity.ListActivity"
+            android:windowSoftInputMode="adjustPan">
+        </activity>
     </application>
 
 </manifest>
