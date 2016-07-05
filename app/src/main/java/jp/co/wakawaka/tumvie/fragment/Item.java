@@ -9,5 +9,5 @@ public class Item {
     public String userName;
     public Bitmap videoCaptureImageBitmap;
     public String caption;
-    public String movieUrl;
+    public String videoUrl;
 }

@@ -12,7 +12,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.tumblr.jumblr.JumblrClient;
+import com.tumblr.jumblr.request.RequestBuilder;
+import com.tumblr.jumblr.types.Post;
+import com.tumblr.jumblr.types.Video;
+import com.tumblr.jumblr.types.VideoPost;
+
+import jp.co.wakawaka.tumvie.BuildConfig;
 import jp.co.wakawaka.tumvie.R;
+import jp.co.wakawaka.tumvie.activity.CallbackActivity;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
@@ -24,7 +32,9 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A fragment representing a list of Items.
@@ -39,6 +49,9 @@ public class ItemFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
+
+
+    private JumblrClient jumblrClient;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -64,47 +77,21 @@ public class ItemFragment extends Fragment {
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
+
+        jumblrClient = new JumblrClient(
+                BuildConfig.CONSUMER_KEY
+                , BuildConfig.CONSUMER_SECRET
+        );
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_item_list, container, false);
-        final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.video_list);
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.video_list);
 
         // TODO：仮のデータ
-        photoObservable.subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Bitmap>() {
-                    private Bitmap captureImageBitmap;
-
-                    @Override
-                    public void onCompleted() {
-                        Context context = recyclerView.getContext();
-                        if (mColumnCount <= 1) {
-                            recyclerView.setLayoutManager(new LinearLayoutManager(context));
-                        } else {
-                            recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-                        }
-                        List<Item> items = new ArrayList<>();
-                        for (int i = 0; i < 20; i++) {
-                            Item item = new Item();
-                            item.userName = "test";
-                            item.videoCaptureImageBitmap = captureImageBitmap;
-                            items.add(item);
-                        }
-                        recyclerView.setAdapter(new MyItemRecyclerViewAdapter(items, mListener));
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                    }
-
-                    @Override
-                    public void onNext(Bitmap bitmap) {
-                        captureImageBitmap = bitmap;
-                    }
-                });
+        subscribeVideo(recyclerView);
         return view;
     }
 
@@ -141,6 +128,41 @@ public class ItemFragment extends Fragment {
         void onListFragmentInteraction(Item item);
     }
 
+    private void subscribePhoto(final RecyclerView recyclerView) {
+        photoObservable.subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Bitmap>() {
+                    private Bitmap captureImageBitmap;
+
+                    @Override
+                    public void onCompleted() {
+                        Context context = recyclerView.getContext();
+                        if (mColumnCount <= 1) {
+                            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+                        } else {
+                            recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+                        }
+                        List<Item> items = new ArrayList<>();
+                        for (int i = 0; i < 20; i++) {
+                            Item item = new Item();
+                            item.userName = "test";
+                            item.videoCaptureImageBitmap = captureImageBitmap;
+                            items.add(item);
+                        }
+                        recyclerView.setAdapter(new MyItemRecyclerViewAdapter(items, mListener));
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+
+                    @Override
+                    public void onNext(Bitmap bitmap) {
+                        captureImageBitmap = bitmap;
+                    }
+                });
+    }
+
     private Observable<Bitmap> photoObservable = Observable.create(
             new Observable.OnSubscribe<Bitmap>() {
                 @Override
@@ -153,6 +175,69 @@ public class ItemFragment extends Fragment {
                         subscriber.onNext(image);
                     } catch (MalformedURLException e) {
                     } catch (IOException e) {
+                    }
+                    // TODO：ダッシュボードの続きを取得する方法は？
+                    // TODO：RequestBuilder自前で用意したらいけるかも
+                    subscriber.onCompleted();
+                }
+            }
+    );
+
+    private void subscribeVideo(final RecyclerView recyclerView) {
+        videoObservable.subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<String>() {
+                    List<Item> items = new ArrayList<>();
+
+                    @Override
+                    public void onCompleted() {
+                        Context context = recyclerView.getContext();
+                        if (mColumnCount <= 1) {
+                            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+                        } else {
+                            recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+                        }
+                        recyclerView.setAdapter(new MyItemRecyclerViewAdapter(items, mListener));
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+                    @Override
+                    public void onNext(String videoPath) {
+                        Item item = new Item();
+                        item.userName = "dummy";
+                        item.videoUrl = videoPath;
+                        items.add(item);
+                    }
+                });
+    }
+
+    private Observable<String> videoObservable = Observable.create(
+            new Observable.OnSubscribe<String>() {
+                @Override
+                public void call(Subscriber<? super String> subscriber) {
+//                        List<Post> posts = jumblrClient.userDashboard();
+                    RequestBuilder requestBuilder = new RequestBuilder(jumblrClient);
+                    Map<String, String> options = new HashMap<>();
+                    options.put("api_key", BuildConfig.CONSUMER_KEY);
+                    options.put("type", CallbackActivity.POST_TYPE_VIDEO);
+                    List<Post> posts = requestBuilder.get("/blog/glitteradio/posts", options).getPosts();
+                    for (Post post : posts) {
+                        VideoPost videoPost = (VideoPost) post;
+                        List<Video> videos = videoPost.getVideos();
+                        for (Video video : videos) {
+                            String html = video.getEmbedCode();
+                            String[] a = html.split("src=");
+                            String[] b = a[1].split("\"");
+                            if (b[1].contains("www.youtube.com")) {
+                                // TODO：youtubeはvideoviewで再生できない。youtubeapiが必要
+                                // TODO：vineも無理。現段階で確認しているのはこの２つ
+                                continue;
+                            }
+                            subscriber.onNext(b[1]);
+                            // 1つの動画に3つのサイズ(250,400,500)がある。暫定で一番小さいのを再生してbreak
+                            break;
+                        }
                     }
                     // TODO：ダッシュボードの続きを取得する方法は？
                     // TODO：RequestBuilder自前で用意したらいけるかも
