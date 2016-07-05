@@ -1,6 +1,8 @@
 package jp.co.wakawaka.tumvie.fragment;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -11,9 +13,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import jp.co.wakawaka.tumvie.R;
-import jp.co.wakawaka.tumvie.fragment.dummy.DummyContent;
-import jp.co.wakawaka.tumvie.fragment.dummy.DummyContent.DummyItem;
+import rx.Observable;
+import rx.Observer;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -60,18 +70,41 @@ public class ItemFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_item_list, container, false);
+        final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.video_list);
 
-        // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-            recyclerView.setAdapter(new MyItemRecyclerViewAdapter(DummyContent.ITEMS, mListener));
-        }
+        // TODO：仮のデータ
+        photoObservable.subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Bitmap>() {
+                    private Bitmap captureImageBitmap;
+
+                    @Override
+                    public void onCompleted() {
+                        Context context = recyclerView.getContext();
+                        if (mColumnCount <= 1) {
+                            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+                        } else {
+                            recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+                        }
+                        List<Item> items = new ArrayList<>();
+                        for (int i = 0; i < 20; i++) {
+                            Item item = new Item();
+                            item.userName = "test";
+                            item.videoCaptureImageBitmap = captureImageBitmap;
+                            items.add(item);
+                        }
+                        recyclerView.setAdapter(new MyItemRecyclerViewAdapter(items, mListener));
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+
+                    @Override
+                    public void onNext(Bitmap bitmap) {
+                        captureImageBitmap = bitmap;
+                    }
+                });
         return view;
     }
 
@@ -105,6 +138,26 @@ public class ItemFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
+        void onListFragmentInteraction(Item item);
     }
+
+    private Observable<Bitmap> photoObservable = Observable.create(
+            new Observable.OnSubscribe<Bitmap>() {
+                @Override
+                public void call(Subscriber<? super Bitmap> subscriber) {
+                    InputStream imageIs;
+                    try {
+                        URL imageUrl = new URL("https://cdn.qiita.com/assets/qiita-fb-f1d6559f13f7e8de7260c6cec4d3b8f9c2eab8322a69fd786baea877d220278b.png");
+                        imageIs = imageUrl.openStream();
+                        Bitmap image = BitmapFactory.decodeStream(imageIs);
+                        subscriber.onNext(image);
+                    } catch (MalformedURLException e) {
+                    } catch (IOException e) {
+                    }
+                    // TODO：ダッシュボードの続きを取得する方法は？
+                    // TODO：RequestBuilder自前で用意したらいけるかも
+                    subscriber.onCompleted();
+                }
+            }
+    );
 }

@@ -30,6 +30,7 @@ public class DummyContent {
         for (int i = 1; i <= COUNT; i++) {
             addItem(createDummyItem(i));
         }
+        String a= "";
     }
 
     private static void addItem(DummyItem item) {
