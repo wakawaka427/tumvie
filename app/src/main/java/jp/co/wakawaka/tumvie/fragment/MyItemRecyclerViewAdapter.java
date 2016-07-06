@@ -76,7 +76,6 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView mUserName;
-        public final ImageView mVideoCapture;
         public final VideoView mTestVideo;
         public Item mItem;
 
@@ -84,7 +83,6 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
             super(view);
             mView = view;
             mUserName = (TextView) view.findViewById(R.id.user_name);
-            mVideoCapture = (ImageView) view.findViewById(R.id.video_capture);
             mTestVideo = (VideoView) view.findViewById(R.id.test_video);
         }
 
