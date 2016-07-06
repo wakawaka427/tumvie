@@ -186,7 +186,7 @@ public class ItemFragment extends Fragment {
     private void subscribeVideo(final RecyclerView recyclerView) {
         videoObservable.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<String>() {
+                .subscribe(new Observer<Item>() {
                     List<Item> items = new ArrayList<>();
 
                     @Override
@@ -203,19 +203,17 @@ public class ItemFragment extends Fragment {
                     public void onError(Throwable e) {
                     }
                     @Override
-                    public void onNext(String videoPath) {
-                        Item item = new Item();
+                    public void onNext(Item item) {
                         item.userName = "dummy";
-                        item.videoUrl = videoPath;
                         items.add(item);
                     }
                 });
     }
 
-    private Observable<String> videoObservable = Observable.create(
-            new Observable.OnSubscribe<String>() {
+    private Observable<Item> videoObservable = Observable.create(
+            new Observable.OnSubscribe<Item>() {
                 @Override
-                public void call(Subscriber<? super String> subscriber) {
+                public void call(Subscriber<? super Item> subscriber) {
 //                        List<Post> posts = jumblrClient.userDashboard();
                     RequestBuilder requestBuilder = new RequestBuilder(jumblrClient);
                     Map<String, String> options = new HashMap<>();
@@ -224,6 +222,14 @@ public class ItemFragment extends Fragment {
                     List<Post> posts = requestBuilder.get("/blog/glitteradio/posts", options).getPosts();
                     for (Post post : posts) {
                         VideoPost videoPost = (VideoPost) post;
+                        if (videoPost.getPermalinkUrl() != null && !"".equals(videoPost.getPermalinkUrl())) {
+                            // TODO：vineとかインスタとかはpermalinkがある（permalinkがあることがその保証かはわからん）
+                            // TODO：こいつらの場合はwebviewにするとか考えたほうがよさげ
+                            Item item = new Item();
+                            item.videoUrl = videoPost.getPermalinkUrl();
+                            subscriber.onNext(item);
+                            continue;
+                        }
                         List<Video> videos = videoPost.getVideos();
                         for (Video video : videos) {
                             String html = video.getEmbedCode();
@@ -234,7 +240,10 @@ public class ItemFragment extends Fragment {
                                 // TODO：vineも無理。現段階で確認しているのはこの２つ
                                 continue;
                             }
-                            subscriber.onNext(b[1]);
+                            Item item = new Item();
+                            item.videoCaptureImageBitmap = getBitmap(videoPost.getThumbnailUrl());
+                            item.videoUrl = b[1];
+                            subscriber.onNext(item);
                             // 1つの動画に3つのサイズ(250,400,500)がある。暫定で一番小さいのを再生してbreak
                             break;
                         }
@@ -242,6 +251,17 @@ public class ItemFragment extends Fragment {
                     // TODO：ダッシュボードの続きを取得する方法は？
                     // TODO：RequestBuilder自前で用意したらいけるかも
                     subscriber.onCompleted();
+                }
+                private Bitmap getBitmap(String url) {
+                    InputStream imageIs;
+                    try {
+                        URL imageUrl = new URL(url);
+                        imageIs = imageUrl.openStream();
+                        return BitmapFactory.decodeStream(imageIs);
+                    } catch (MalformedURLException e) {
+                    } catch (IOException e) {
+                    }
+                    return null;
                 }
             }
     );

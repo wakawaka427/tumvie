@@ -1,6 +1,7 @@
 package jp.co.wakawaka.tumvie.fragment;
 
 import android.media.MediaPlayer;
+import android.media.session.MediaController;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -42,18 +43,20 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
         holder.mItem = mValues.get(position);
         holder.mUserName.setText(mValues.get(position).userName);
 //        holder.mVideoCapture.setImageBitmap(mValues.get(position).videoCaptureImageBitmap);
-
+        holder.mThumbnail.setImageBitmap(mValues.get(position).videoCaptureImageBitmap);
         holder.mTestVideo.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
+                holder.mThumbnail.setVisibility(View.GONE);
                 mp.start();
             }
         });
-        holder.mTestVideo.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-            }
-        });
+//        holder.mTestVideo.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+//            @Override
+//            public void onCompletion(MediaPlayer mp) {
+//            }
+//        });
+
         holder.mTestVideo.setVideoURI(Uri.parse(holder.mItem.videoUrl));
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -76,6 +79,7 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView mUserName;
+        public final ImageView mThumbnail;
         public final VideoView mTestVideo;
         public Item mItem;
 
@@ -83,6 +87,7 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
             super(view);
             mView = view;
             mUserName = (TextView) view.findViewById(R.id.user_name);
+            mThumbnail = (ImageView) view.findViewById(R.id.thumbnail);
             mTestVideo = (VideoView) view.findViewById(R.id.test_video);
         }
 
