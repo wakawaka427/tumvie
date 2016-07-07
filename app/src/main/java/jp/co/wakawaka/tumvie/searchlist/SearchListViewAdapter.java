@@ -9,10 +9,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import jp.co.wakawaka.tumvie.BitmapFromUrl;
@@ -26,6 +23,12 @@ public class SearchListViewAdapter extends BaseAdapter {
     Context context;
     LayoutInflater layoutInflater = null;
     List<Item> itemList;
+
+    public SearchListViewAdapter(Context context) {
+        this.itemList = new ArrayList<>();
+        this.context = context;
+        this.layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    }
 
     public SearchListViewAdapter(List<Item> itemList, Context context) {
         this.itemList = itemList;
@@ -63,6 +66,15 @@ public class SearchListViewAdapter extends BaseAdapter {
 
         return convertView;
     }
+
+    public boolean add(Item item){
+        boolean ress = itemList.add(item);
+        if (ress) {
+            notifyDataSetChanged();
+        }
+        return ress;
+    }
+
 
     public class ViewHolder {
         public final View view;

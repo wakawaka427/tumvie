@@ -61,19 +61,22 @@ public class SearchListFragment extends Fragment {
         videoObservable.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Item>() {
-                    List<Item> items = new ArrayList<>();
+                    SearchListViewAdapter adapter;
                     @Override
                     public void onCompleted() {
-                        Context context = searchList.getContext();
-                        searchList.setAdapter(new SearchListViewAdapter(items, context));
+//                        searchList.setAdapter(adapter);
                     }
                     @Override
                     public void onError(Throwable e) {
                     }
                     @Override
                     public void onNext(Item item) {
+                        if (adapter == null) {
+                            adapter = new SearchListViewAdapter(searchList.getContext());
+                            searchList.setAdapter(adapter);
+                        }
                         item.userName = "dummy";
-                        items.add(item);
+                        adapter.add(item);
                     }
                 });
     }
@@ -108,13 +111,13 @@ public class SearchListFragment extends Fragment {
                             item.videoThumbnailUrl = videoPost.getThumbnailUrl();
                             item.videoUrl = b[1];
                             subscriber.onNext(item);
+                            count++;
                             // 1つの動画に3つのサイズ(250,400,500)がある。暫定で一番小さいのを再生してbreak
                             break;
                         }
-                        count++;
-                        if (count > 3) {
-                            break;
-                        }
+//                        if (count > 10) {
+//                            break;
+//                        }
                     }
                     // TODO：ダッシュボードの続きを取得する方法は？
                     // TODO：RequestBuilder自前で用意したらいけるかも
