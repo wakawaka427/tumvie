@@ -12,7 +12,7 @@
     <fragment
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="jp.co.wakawaka.tumvie.fragment.ItemFragment"
+        android:name="jp.co.wakawaka.tumvie.listfragmenttest.ItemFragment"
         android:id="@+id/fragment"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true" />

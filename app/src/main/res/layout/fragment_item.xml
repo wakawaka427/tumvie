@@ -19,6 +19,7 @@
     </LinearLayout>
 
     <FrameLayout
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -34,5 +35,10 @@
             android:id="@+id/thumbnail"
             android:layout_gravity="center" />
     </FrameLayout>
+
+    <SurfaceView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/video_surface" />
 
 </LinearLayout>

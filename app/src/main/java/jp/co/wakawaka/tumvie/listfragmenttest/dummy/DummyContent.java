@@ -1,4 +1,4 @@
-package jp.co.wakawaka.tumvie.fragment.dummy;
+package jp.co.wakawaka.tumvie.listfragmenttest.dummy;
 
 import java.util.ArrayList;
 import java.util.HashMap;

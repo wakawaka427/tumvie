@@ -4,8 +4,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import jp.co.wakawaka.tumvie.R;
-import jp.co.wakawaka.tumvie.fragment.Item;
-import jp.co.wakawaka.tumvie.fragment.ItemFragment;
+import jp.co.wakawaka.tumvie.listfragmenttest.Item;
+import jp.co.wakawaka.tumvie.listfragmenttest.ItemFragment;
 
 public class ListActivity extends AppCompatActivity implements ItemFragment.OnListFragmentInteractionListener {
 

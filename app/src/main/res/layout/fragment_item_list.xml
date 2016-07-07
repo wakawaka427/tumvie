@@ -19,7 +19,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         app:layoutManager="android.support.v7.widget.LinearLayoutManager"
-        tools:context="jp.co.wakawaka.tumvie.fragment.ItemFragment"
+        tools:context="jp.co.wakawaka.tumvie.listfragmenttest.ItemFragment"
         tools:listitem="@layout/fragment_item" />
 
 </LinearLayout>
