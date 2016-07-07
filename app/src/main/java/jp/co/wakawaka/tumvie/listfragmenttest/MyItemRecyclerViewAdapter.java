@@ -101,7 +101,7 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
     }
 
     private void _playVideo(final ViewHolder holder, int position) {
-        holder.mThumbnail.setImageBitmap(mValues.get(position).videoCaptureImageBitmap);
+        holder.mThumbnail.setImageBitmap(mValues.get(position).videoThumbnailBitmap);
         holder.mTestVideo.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {

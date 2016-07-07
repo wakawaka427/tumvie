@@ -9,11 +9,19 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".activity.ListActivity">
 
-    <fragment
+    <!--<fragment
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:name="jp.co.wakawaka.tumvie.listfragmenttest.ItemFragment"
         android:id="@+id/fragment"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />-->
+
+    <fragment
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:name="jp.co.wakawaka.tumvie.searchlist.SearchListFragment"
+        android:id="@+id/search_fragment"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true" />
 </RelativeLayout>

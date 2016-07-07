@@ -146,7 +146,7 @@ public class ItemFragment extends Fragment {
                         for (int i = 0; i < 20; i++) {
                             Item item = new Item();
                             item.userName = "test";
-                            item.videoCaptureImageBitmap = captureImageBitmap;
+                            item.videoThumbnailBitmap = captureImageBitmap;
                             items.add(item);
                         }
                         recyclerView.setAdapter(new MyItemRecyclerViewAdapter(items, mListener));
@@ -241,7 +241,7 @@ public class ItemFragment extends Fragment {
                                 continue;
                             }
                             Item item = new Item();
-                            item.videoCaptureImageBitmap = getBitmap(videoPost.getThumbnailUrl());
+                            item.videoThumbnailBitmap = getBitmap(videoPost.getThumbnailUrl());
                             item.videoUrl = b[1];
                             subscriber.onNext(item);
                             // 1つの動画に3つのサイズ(250,400,500)がある。暫定で一番小さいのを再生してbreak
