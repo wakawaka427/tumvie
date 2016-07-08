@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,16 +55,35 @@ public class SearchListViewAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
         if (convertView == null) {
             convertView = layoutInflater.inflate(R.layout.fragment_search_list_item, parent,false);
-            holder = new ViewHolder(convertView);
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
         }
 
-        (new BitmapFromUrl()).loadBotmap(holder.fragmentSearchListThumbnail, itemList.get(position).videoThumbnailUrl);
+        ImageView thumbnailImageView = (ImageView) convertView.findViewById(R.id.fragment_search_list_thumbnail);
+
+        // ImageViewにタグをつけておいて、同じURLじゃなかったら表示する
+        if (thumbnailImageView.getTag() == null ||
+                !thumbnailImageView.getTag().equals(itemList.get(position).videoThumbnailUrl)) {
+            String videoThumbnailUrl = itemList.get(position).videoThumbnailUrl;
+            Picasso.with(context).load(videoThumbnailUrl).into(thumbnailImageView);
+            thumbnailImageView.setTag(videoThumbnailUrl);
+        }
+//        ViewHolder holder;
+//        if (convertView == null) {
+//            convertView = layoutInflater.inflate(R.layout.fragment_search_list_item, parent,false);
+//            holder = new ViewHolder(convertView);
+//            convertView.setTag(holder);
+//        } else {
+//            holder = (ViewHolder) convertView.getTag();
+//        }
+//
+//        // ImageViewにタグをつけておいて、同じURLじゃなかったら表示する
+//        if (holder.fragmentSearchListThumbnail.getTag() == null ||
+//                !holder.fragmentSearchListThumbnail.getTag().equals(itemList.get(position).videoThumbnailUrl)) {
+//            String videoThumbnailUrl = itemList.get(position).videoThumbnailUrl;
+//            Picasso.with(context).load(videoThumbnailUrl).into(holder.fragmentSearchListThumbnail);
+//            holder.fragmentSearchListThumbnail.setTag(videoThumbnailUrl);
+//        }
 
         return convertView;
     }

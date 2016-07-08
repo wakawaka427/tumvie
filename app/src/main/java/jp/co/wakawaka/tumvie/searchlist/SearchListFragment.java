@@ -1,6 +1,5 @@
 package jp.co.wakawaka.tumvie.searchlist;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -14,7 +13,6 @@ import com.tumblr.jumblr.types.Post;
 import com.tumblr.jumblr.types.Video;
 import com.tumblr.jumblr.types.VideoPost;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +42,10 @@ public class SearchListFragment extends Fragment {
         );
     }
 
+    private SearchListViewAdapter adapter;
+    private ListView searchList;
+    private int offset = 0;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -51,17 +53,26 @@ public class SearchListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_search_list, container, false);
 
         // リストビューを取得
-        ListView searchList = (ListView) view.findViewById(R.id.search_list);
-        subscribeVideo(searchList);
+        searchList = (ListView) view.findViewById(R.id.search_list);
+        searchList.setOnScrollListener(new EndlessScrollListener() {
+            @Override
+            public boolean onLoadMore(int page, int totalItemsCount) {
+                offset += adapter.getCount();
+                subscribeVideo();
+                return false;
+            }
+        });
+        adapter = new SearchListViewAdapter(searchList.getContext());
+        searchList.setAdapter(adapter);
+        subscribeVideo();
 
         return view;
     }
 
-    private void subscribeVideo(final ListView searchList) {
+    private void subscribeVideo() {
         videoObservable.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Item>() {
-                    SearchListViewAdapter adapter;
                     @Override
                     public void onCompleted() {
 //                        searchList.setAdapter(adapter);
@@ -71,10 +82,6 @@ public class SearchListFragment extends Fragment {
                     }
                     @Override
                     public void onNext(Item item) {
-                        if (adapter == null) {
-                            adapter = new SearchListViewAdapter(searchList.getContext());
-                            searchList.setAdapter(adapter);
-                        }
                         item.userName = "dummy";
                         adapter.add(item);
                     }
@@ -86,9 +93,10 @@ public class SearchListFragment extends Fragment {
                 @Override
                 public void call(Subscriber<? super Item> subscriber) {
                     RequestBuilder requestBuilder = new RequestBuilder(jumblrClient);
-                    Map<String, String> options = new HashMap<>();
+                    Map<String, Object> options = new HashMap<>();
                     options.put("api_key", BuildConfig.CONSUMER_KEY);
                     options.put("type", CallbackActivity.POST_TYPE_VIDEO);
+                    options.put("offset", offset) ;
                     List<Post> posts = requestBuilder.get("/blog/glitteradio/posts", options).getPosts();
                     int count = 0;
                     for (Post post : posts) {
