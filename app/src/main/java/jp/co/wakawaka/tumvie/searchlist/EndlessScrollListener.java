@@ -3,6 +3,7 @@ package jp.co.wakawaka.tumvie.searchlist;
 import android.widget.AbsListView;
 
 /**
+ * 参考：https://github.com/codepath/android_guides/wiki/Endless-Scrolling-with-AdapterViews-and-RecyclerView
  * Created by wakabayashieisuke on 2016/07/08.
  */
 public abstract class EndlessScrollListener implements AbsListView.OnScrollListener {
