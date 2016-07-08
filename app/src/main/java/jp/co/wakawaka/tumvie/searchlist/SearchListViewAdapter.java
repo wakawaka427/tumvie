@@ -32,12 +32,6 @@ public class SearchListViewAdapter extends BaseAdapter {
         this.layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public SearchListViewAdapter(List<Item> itemList, Context context) {
-        this.itemList = itemList;
-        this.context = context;
-        this.layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    }
-
     @Override
     public int getCount() {
         return itemList.size();
@@ -68,22 +62,6 @@ public class SearchListViewAdapter extends BaseAdapter {
             Picasso.with(context).load(videoThumbnailUrl).into(thumbnailImageView);
             thumbnailImageView.setTag(videoThumbnailUrl);
         }
-//        ViewHolder holder;
-//        if (convertView == null) {
-//            convertView = layoutInflater.inflate(R.layout.fragment_search_list_item, parent,false);
-//            holder = new ViewHolder(convertView);
-//            convertView.setTag(holder);
-//        } else {
-//            holder = (ViewHolder) convertView.getTag();
-//        }
-//
-//        // ImageViewにタグをつけておいて、同じURLじゃなかったら表示する
-//        if (holder.fragmentSearchListThumbnail.getTag() == null ||
-//                !holder.fragmentSearchListThumbnail.getTag().equals(itemList.get(position).videoThumbnailUrl)) {
-//            String videoThumbnailUrl = itemList.get(position).videoThumbnailUrl;
-//            Picasso.with(context).load(videoThumbnailUrl).into(holder.fragmentSearchListThumbnail);
-//            holder.fragmentSearchListThumbnail.setTag(videoThumbnailUrl);
-//        }
 
         return convertView;
     }
@@ -94,21 +72,5 @@ public class SearchListViewAdapter extends BaseAdapter {
             notifyDataSetChanged();
         }
         return ress;
-    }
-
-
-    public class ViewHolder {
-        public final View view;
-        public final ImageView fragmentSearchListThumbnail;
-
-        public ViewHolder(View view) {
-            this.view = view;
-            this.fragmentSearchListThumbnail = (ImageView) view.findViewById(R.id.fragment_search_list_thumbnail);
-        }
-
-        @Override
-        public String toString() {
-            return super.toString();
-        }
     }
 }

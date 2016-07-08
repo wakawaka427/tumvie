@@ -57,7 +57,6 @@ public class SearchListFragment extends Fragment {
         searchList.setOnScrollListener(new EndlessScrollListener() {
             @Override
             public boolean onLoadMore(int page, int totalItemsCount) {
-                offset += adapter.getCount();
                 subscribeVideo();
                 return false;
             }
@@ -96,12 +95,13 @@ public class SearchListFragment extends Fragment {
                     Map<String, Object> options = new HashMap<>();
                     options.put("api_key", BuildConfig.CONSUMER_KEY);
                     options.put("type", CallbackActivity.POST_TYPE_VIDEO);
-                    options.put("offset", offset) ;
+                    options.put("offset", offset);
                     List<Post> posts = requestBuilder.get("/blog/glitteradio/posts", options).getPosts();
-                    int count = 0;
                     for (Post post : posts) {
+                        offset++;
                         VideoPost videoPost = (VideoPost) post;
-                        if (videoPost.getPermalinkUrl() != null && !"".equals(videoPost.getPermalinkUrl())) {
+                        if (videoPost.getThumbnailUrl() == null || "".equals(videoPost.getThumbnailUrl()))  {
+                            // サムネイルのないものは表示しない。（vineやinstagram等）
                             continue;
                         }
                         List<Video> videos = videoPost.getVideos();
@@ -115,20 +115,13 @@ public class SearchListFragment extends Fragment {
                                 continue;
                             }
                             Item item = new Item();
-//                            item.videoThumbnailBitmap = getBitmap(videoPost.getThumbnailUrl());
                             item.videoThumbnailUrl = videoPost.getThumbnailUrl();
                             item.videoUrl = b[1];
                             subscriber.onNext(item);
-                            count++;
                             // 1つの動画に3つのサイズ(250,400,500)がある。暫定で一番小さいのを再生してbreak
                             break;
                         }
-//                        if (count > 10) {
-//                            break;
-//                        }
                     }
-                    // TODO：ダッシュボードの続きを取得する方法は？
-                    // TODO：RequestBuilder自前で用意したらいけるかも
                     subscriber.onCompleted();
                 }
             }
