@@ -13,11 +13,6 @@
         <activity
             android:name=".activity.MainActivity"
             android:theme="@style/AppThemeNoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".activity.CallbackActivity">
             <intent-filter>
@@ -29,9 +24,18 @@
                 <data android:scheme="tumblrclient" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.ListActivity"
-            android:windowSoftInputMode="adjustPan">
-        </activity>
+        <activity
+            android:name=".activity.ListActivity"
+            android:windowSoftInputMode="adjustPan"></activity>
+        <activity
+            android:name=".activity.ListTabsActivity"
+            android:label="@string/title_activity_list_tabs"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter></activity>
     </application>
 
 </manifest>
