@@ -97,6 +97,7 @@ public class SearchListFragment extends Fragment {
                     options.put("api_key", BuildConfig.CONSUMER_KEY);
                     options.put("type", CallbackActivity.POST_TYPE_VIDEO);
                     options.put("offset", offset) ;
+                    options.put("limit", 2);
                     List<Post> posts = requestBuilder.get("/blog/glitteradio/posts", options).getPosts();
                     int count = 0;
                     for (Post post : posts) {
