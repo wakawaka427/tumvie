@@ -3,6 +3,7 @@ package jp.co.wakawaka.tumvie.searchlist;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -144,6 +145,7 @@ public class SearchListFragment extends Fragment {
                     }
                     @Override
                     public void onError(Throwable e) {
+                        Log.e("ERROR", e.toString());
                     }
                     @Override
                     public void onNext(Item item) {
@@ -178,6 +180,7 @@ public class SearchListFragment extends Fragment {
                             Item item = new Item();
                             item.videoThumbnailUrl = videoPost.getThumbnailUrl();
                             item.videoUrl = b[1];
+                            item.postId = String.valueOf(videoPost.getId());
                             subscriber.onNext(item);
                             // 1つの動画に3つのサイズ(250,400,500)がある。暫定で一番小さいのを再生してbreak
                             break;

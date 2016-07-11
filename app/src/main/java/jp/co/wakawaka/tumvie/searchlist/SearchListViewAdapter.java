@@ -3,12 +3,15 @@ package jp.co.wakawaka.tumvie.searchlist;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -53,13 +56,28 @@ public class SearchListViewAdapter extends BaseAdapter {
             convertView = layoutInflater.inflate(R.layout.fragment_search_list_item, parent,false);
         }
 
+        Item item = itemList.get(position);
+
+        ((TextView) convertView.findViewById(R.id.debug_thumbnail_url)).setText("URL:" + item.videoThumbnailUrl);
+        ((TextView) convertView.findViewById(R.id.debug_id)).setText("Id:" + item.postId);
+
         ImageView thumbnailImageView = (ImageView) convertView.findViewById(R.id.fragment_search_list_thumbnail);
 
         // ImageViewにタグをつけておいて、同じURLじゃなかったら表示する
         if (thumbnailImageView.getTag() == null ||
-                !thumbnailImageView.getTag().equals(itemList.get(position).videoThumbnailUrl)) {
-            String videoThumbnailUrl = itemList.get(position).videoThumbnailUrl;
-            Picasso.with(context).load(videoThumbnailUrl).into(thumbnailImageView);
+                !thumbnailImageView.getTag().equals(item.videoThumbnailUrl)) {
+            String videoThumbnailUrl = item.videoThumbnailUrl;
+            Picasso.with(context).load(videoThumbnailUrl).into(thumbnailImageView, new Callback() {
+                @Override
+                public void onSuccess() {
+
+                }
+
+                @Override
+                public void onError() {
+                    Log.e("Picasso Error")
+                }
+            });
             thumbnailImageView.setTag(videoThumbnailUrl);
         }
 
