@@ -46,6 +46,8 @@ public class SearchListFragment extends Fragment {
     private static final int SEARCH_TARGET_BLOG = 0;
     private static final int SEARCH_TARGET_TAG = 1;
 
+    private static final Object LOCK = new Object();
+
     private JumblrClient jumblrClient;
     private int searchTarget;
     private String searchText;
@@ -80,7 +82,7 @@ public class SearchListFragment extends Fragment {
         searchList = (ListView) view.findViewById(R.id.search_list);
         searchList.setOnScrollListener(new EndlessScrollListener() {
             @Override
-            public boolean onLoadMore(int page, int totalItemsCount) {
+            public boolean onLoadMore(int totalItemsCount) {
                 if (offset == 0) {
                     return true;
                 }
@@ -139,32 +141,37 @@ public class SearchListFragment extends Fragment {
     }
 
     private void subscribeVideo() {
-        videoObservable.subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Item>() {
-                    @Override
-                    public void onCompleted() {
+        synchronized (LOCK) {
+            videoObservable.subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<Item>() {
+                        @Override
+                        public void onCompleted() {
 //                        searchList.setAdapter(adapter);
-                    }
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.e("ERROR", e.toString());
-                    }
-                    @Override
-                    public void onNext(Item item) {
-                        item.userName = "dummy";
-                        adapter.add(item);
-                    }
-                });
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Log.e("ERROR", e.toString());
+                        }
+
+                        @Override
+                        public void onNext(Item item) {
+                            item.userName = "dummy";
+                            adapter.add(item);
+                        }
+                    });
+        }
     }
 
     private Observable<Item> videoObservable = Observable.create(
             new Observable.OnSubscribe<Item>() {
+                private static final int LIMIT = 10;
                 @Override
                 public void call(Subscriber<? super Item> subscriber) {
                     List<Post> posts = getPosts();
+                    offset += LIMIT;
                     for (Post post : posts) {
-                        offset++;
                         VideoPost videoPost = (VideoPost) post;
                         if (videoPost.getThumbnailUrl() == null || "".equals(videoPost.getThumbnailUrl()))  {
                             // サムネイルのないものは表示しない。（vineやinstagram等）
@@ -197,8 +204,10 @@ public class SearchListFragment extends Fragment {
                     Map<String, Object> options = new HashMap<>();
                     options.put("api_key", BuildConfig.CONSUMER_KEY);
                     options.put("type", CallbackActivity.POST_TYPE_VIDEO);
+                    options.put("limit", LIMIT);
                     options.put("offset", offset);
                     if (SEARCH_TARGET_BLOG == searchTarget) {
+                        Log.e("options", options.toString());
                         return requestBuilder.get("/blog/" + searchText + "/posts", options).getPosts();
                     } else {
                         options.put("tag", searchText);
