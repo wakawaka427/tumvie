@@ -28,6 +28,9 @@ import rx.schedulers.Schedulers;
  */
 public class HistoryListFragment extends Fragment {
 
+    private Realm realm;
+    private View view;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,13 +40,15 @@ public class HistoryListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_history_list, container, false);
+        view = inflater.inflate(R.layout.fragment_history_list, container, false);
 
-        RealmConfiguration realmConfiguration = new RealmConfiguration
-                .Builder(getActivity())
-                .deleteRealmIfMigrationNeeded()
-                .build();
-        Realm realm = Realm.getInstance(realmConfiguration);
+        return view;
+    }
+
+    public void reloadList() {
+        if (realm == null) {
+            realm = Realm.getDefaultInstance();
+        }
         RealmResults<History> histories = realm
                 .where(History.class)
                 .findAllSorted("currentTimeMillis", Sort.DESCENDING);
@@ -52,8 +57,6 @@ public class HistoryListFragment extends Fragment {
             RealmRecyclerView realmRecyclerView = (RealmRecyclerView) view.findViewById(R.id.history_list);
             realmRecyclerView.setAdapter(historyListAdapter);
         }
-
-        return view;
     }
 
     @Override

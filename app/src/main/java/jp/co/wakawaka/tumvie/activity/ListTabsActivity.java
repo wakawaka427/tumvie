@@ -14,6 +14,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import java.util.List;
+
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import jp.co.wakawaka.tumvie.R;
 import jp.co.wakawaka.tumvie.favoritelist.FavoriteListFragment;
 import jp.co.wakawaka.tumvie.historylist.HistoryListFragment;
@@ -55,9 +59,13 @@ public class ListTabsActivity extends AppCompatActivity {
             }
             @Override
             public void onPageSelected(int position) {
-                if (position == 0) {
-                } else if (position == 1) {
-                } else {
+                if (position == 2) {
+                    List<Fragment> fragments = getSupportFragmentManager().getFragments();
+                    for(Fragment f: fragments) {
+                        if (f instanceof HistoryListFragment) {
+                            ((HistoryListFragment) f).reloadList();
+                        }
+                    }
                 }
             }
             @Override
@@ -84,7 +92,8 @@ public class ListTabsActivity extends AppCompatActivity {
             }
         });
 
-
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this).build();
+        Realm.setDefaultConfiguration(realmConfiguration);
     }
 
 

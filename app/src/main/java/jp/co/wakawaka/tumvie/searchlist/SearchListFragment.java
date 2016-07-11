@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import jp.co.wakawaka.tumvie.BuildConfig;
 import jp.co.wakawaka.tumvie.R;
 import jp.co.wakawaka.tumvie.activity.CallbackActivity;
