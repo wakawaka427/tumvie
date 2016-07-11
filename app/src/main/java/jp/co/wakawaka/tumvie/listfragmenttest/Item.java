@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
  */
 public class Item {
     public int id;
+    public String postId;
     public String userName;
     public Bitmap videoThumbnailBitmap;
     public String videoThumbnailUrl;
