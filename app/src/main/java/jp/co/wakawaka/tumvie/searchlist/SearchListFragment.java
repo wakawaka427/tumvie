@@ -27,10 +27,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.realm.Realm;
 import jp.co.wakawaka.tumvie.BuildConfig;
 import jp.co.wakawaka.tumvie.R;
 import jp.co.wakawaka.tumvie.activity.CallbackActivity;
 import jp.co.wakawaka.tumvie.listfragmenttest.Item;
+import jp.co.wakawaka.tumvie.realm.History;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
@@ -53,6 +55,10 @@ public class SearchListFragment extends Fragment {
     private String searchText;
     private InputMethodManager inputMethodManager;
 
+    private SearchListViewAdapter adapter;
+    private ListView searchList;
+    private int offset = 0;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,10 +68,6 @@ public class SearchListFragment extends Fragment {
                 , BuildConfig.CONSUMER_SECRET
         );
     }
-
-    private SearchListViewAdapter adapter;
-    private ListView searchList;
-    private int offset = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -128,6 +130,13 @@ public class SearchListFragment extends Fragment {
                     if (!keyEvent.isShiftPressed()) {
                         offset = 0;
                         searchText = String.valueOf(textView.getText());
+
+                        Realm realm = Realm.getDefaultInstance();
+                        realm.beginTransaction();
+                        History history = realm.createObject(History.class);
+                        history.setValue(searchText);
+                        realm.commitTransaction();
+
                         adapter = new SearchListViewAdapter(searchList.getContext());
                         searchList.setAdapter(adapter);
                         subscribeVideo();

@@ -1,78 +1,59 @@
 package jp.co.wakawaka.tumvie.historylist;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
+import co.moonmonkeylabs.realmrecyclerview.RealmRecyclerView;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import io.realm.RealmResults;
+import io.realm.Sort;
 import jp.co.wakawaka.tumvie.R;
+import jp.co.wakawaka.tumvie.realm.History;
+import jp.co.wakawaka.tumvie.searchlist.EndlessScrollListener;
+import rx.Observable;
+import rx.Observer;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link HistoryListFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link HistoryListFragment#newInstance} factory method to
- * create an instance of this fragment.
+ *
  */
 public class HistoryListFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    private OnFragmentInteractionListener mListener;
-
-    public HistoryListFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment HistoryListFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static HistoryListFragment newInstance(String param1, String param2) {
-        HistoryListFragment fragment = new HistoryListFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_history_list, container, false);
-    }
+        View view = inflater.inflate(R.layout.fragment_history_list, container, false);
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+        RealmConfiguration realmConfiguration = new RealmConfiguration
+                .Builder(getActivity())
+                .deleteRealmIfMigrationNeeded()
+                .build();
+        Realm realm = Realm.getInstance(realmConfiguration);
+        RealmResults<History> histories = realm
+                .where(History.class)
+                .findAllSorted("currentTimeMillis", Sort.DESCENDING);
+        if (histories != null && histories.size() != 0) {
+            HistoryListViewAdapter historyListAdapter = new HistoryListViewAdapter(getContext(), histories, true, true);
+            RealmRecyclerView realmRecyclerView = (RealmRecyclerView) view.findViewById(R.id.history_list);
+            realmRecyclerView.setAdapter(historyListAdapter);
         }
+
+        return view;
     }
 
     @Override
@@ -84,26 +65,5 @@ public class HistoryListFragment extends Fragment {
 //            throw new RuntimeException(context.toString()
 //                    + " must implement OnFragmentInteractionListener");
 //        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
     }
 }

@@ -49,6 +49,21 @@ public class ListTabsActivity extends AppCompatActivity {
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+            @Override
+            public void onPageSelected(int position) {
+                if (position == 0) {
+                } else if (position == 1) {
+                } else {
+                }
+            }
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
 
         mViewPager.setCurrentItem(1);
 
