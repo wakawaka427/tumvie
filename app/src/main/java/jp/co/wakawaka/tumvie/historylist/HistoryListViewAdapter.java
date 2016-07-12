@@ -3,7 +3,7 @@ package jp.co.wakawaka.tumvie.historylist;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import io.realm.RealmBasedRecyclerViewAdapter;
@@ -21,7 +21,7 @@ public class HistoryListViewAdapter
     public class ViewHolder extends RealmViewHolder {
 
         public TextView todoTextView;
-        public ViewHolder(FrameLayout container) {
+        public ViewHolder(LinearLayout container) {
             super(container);
             this.todoTextView = (TextView) container.findViewById(R.id.keyword);
         }
@@ -38,7 +38,7 @@ public class HistoryListViewAdapter
     @Override
     public ViewHolder onCreateRealmViewHolder(ViewGroup viewGroup, int viewType) {
         View v = inflater.inflate(R.layout.fragment_history_list_item, viewGroup, false);
-        ViewHolder vh = new ViewHolder((FrameLayout) v);
+        ViewHolder vh = new ViewHolder((LinearLayout) v);
         return vh;
     }
 
