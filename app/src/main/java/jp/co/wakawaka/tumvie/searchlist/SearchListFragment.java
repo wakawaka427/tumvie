@@ -3,6 +3,7 @@ package jp.co.wakawaka.tumvie.searchlist;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -60,6 +61,8 @@ public class SearchListFragment extends Fragment {
     private ListView searchList;
     private int offset = 0;
 
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,14 +86,22 @@ public class SearchListFragment extends Fragment {
 
         // リストビューを取得
         searchList = (ListView) view.findViewById(R.id.search_list);
-        searchList.setOnScrollListener(new EndlessScrollListener() {
+//        searchList.setOnScrollListener(new EndlessScrollListener() {
+//            @Override
+//            public boolean onLoadMore(int totalItemsCount) {
+//                if (offset == 0) {
+//                    return true;
+//                }
+//                subscribeVideo();
+//                return true;
+//            }
+//        });
+
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public boolean onLoadMore(int totalItemsCount) {
-                if (offset == 0) {
-                    return true;
-                }
+            public void onRefresh() {
                 subscribeVideo();
-                return true;
             }
         });
 
@@ -158,6 +169,8 @@ public class SearchListFragment extends Fragment {
                         @Override
                         public void onCompleted() {
 //                        searchList.setAdapter(adapter);
+                            mSwipeRefreshLayout.isNestedScrollingEnabled();
+                            mSwipeRefreshLayout.setRefreshing(false);
                         }
 
                         @Override
