@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import io.realm.RealmBasedRecyclerViewAdapter;
@@ -21,7 +22,7 @@ public class HistoryListViewAdapter
     public class ViewHolder extends RealmViewHolder {
 
         public TextView todoTextView;
-        public ViewHolder(LinearLayout container) {
+        public ViewHolder(RelativeLayout container) {
             super(container);
             this.todoTextView = (TextView) container.findViewById(R.id.history_search_keyword);
         }
@@ -38,7 +39,7 @@ public class HistoryListViewAdapter
     @Override
     public ViewHolder onCreateRealmViewHolder(ViewGroup viewGroup, int viewType) {
         View v = inflater.inflate(R.layout.fragment_history_list_item, viewGroup, false);
-        ViewHolder vh = new ViewHolder((LinearLayout) v);
+        ViewHolder vh = new ViewHolder((RelativeLayout) v);
         return vh;
     }
 
