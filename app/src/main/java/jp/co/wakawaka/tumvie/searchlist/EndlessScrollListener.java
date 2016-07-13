@@ -1,6 +1,5 @@
 package jp.co.wakawaka.tumvie.searchlist;
 
-import android.util.Log;
 import android.widget.AbsListView;
 
 /**
