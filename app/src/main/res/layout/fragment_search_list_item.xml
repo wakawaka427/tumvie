@@ -17,6 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/fragment_search_list_thumbnail"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:contentDescription="@string/search_list_thumbnail_no_image"/>
 
 </LinearLayout>

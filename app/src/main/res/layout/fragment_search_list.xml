@@ -4,18 +4,33 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="jp.co.wakawaka.tumvie.searchlist.SearchListFragment"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:id="@+id/search_list_layout">
 
-    <EditText
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/editText"
-        android:maxLength="32"
-        android:maxLines="1"/>
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/search_keyword_edit_text_label"
+            android:id="@+id/search_keyword_edit_text_label"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/search_keyword_edit_text"
+            android:maxLength="32"
+            android:maxLines="1"
+            android:hint=""/>
+
+    </LinearLayout>
 
     <com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/refresh"
+        android:id="@+id/search_list_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:srl_direction="bottom">

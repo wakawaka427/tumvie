@@ -7,4 +7,9 @@
     <string name="title_application_name">tumbie</string>
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
+    <string name="search_keyword_edit_text_label">User</string>
+    <string name="search_list_thumbnail_no_image">No image&#8230;</string>
+    <string name="search_user_not_found">User not found.</string>
+    <string name="search_video_not_found">User\'s video not found.</string>
+    <string name="not_found_snack_bar_dissmiss_button">OK</string>
 </resources>

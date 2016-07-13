@@ -23,7 +23,7 @@ public class HistoryListViewAdapter
         public TextView todoTextView;
         public ViewHolder(LinearLayout container) {
             super(container);
-            this.todoTextView = (TextView) container.findViewById(R.id.keyword);
+            this.todoTextView = (TextView) container.findViewById(R.id.history_search_keyword);
         }
     }
 

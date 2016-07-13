@@ -67,7 +67,7 @@ public class ListTabsActivity extends AppCompatActivity {
         sectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        viewPager = (ViewPager) findViewById(R.id.container);
+        viewPager = (ViewPager) findViewById(R.id.tabs_view_pager);
         viewPager.setAdapter(sectionsPagerAdapter);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -144,7 +144,7 @@ public class ListTabsActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            if (Tab.HISTOR.getValue() == position) {
+            if (Tab.FAVORITE.getValue() == position) {
                 return new FavoriteListFragment();
             } else if (Tab.SEARCH.getValue() == position) {
                 return new SearchListFragment();

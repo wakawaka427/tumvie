@@ -2,15 +2,18 @@ package jp.co.wakawaka.tumvie.searchlist;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -47,12 +50,14 @@ public class SearchListFragment extends Fragment {
     private JumblrClient jumblrClient;
     private InputMethodManager inputMethodManager;
     private CustomProgressDialog progressDialog;
+    private Snackbar notFoundSnackBar;
 
     private int offset = 0;
 
     private SearchListViewAdapter adapter;
     private ListView searchList;
 
+    private LinearLayout searchListLayout;
     private SwipyRefreshLayout swipeRefreshLayout;
     private EditText searchKeywordEditText;
 
@@ -74,11 +79,11 @@ public class SearchListFragment extends Fragment {
 
         inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 
+        searchListLayout = (LinearLayout) view.findViewById(R.id.search_list_layout);
         setSearchKeywordEditText(view);
-
         // リストビューを取得
         searchList = (ListView) view.findViewById(R.id.search_list);
-        swipeRefreshLayout = (SwipyRefreshLayout) view.findViewById(R.id.refresh);
+        swipeRefreshLayout = (SwipyRefreshLayout) view.findViewById(R.id.search_list_refresh);
         swipeRefreshLayout.setOnRefreshListener(new SwipyRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh(SwipyRefreshLayoutDirection direction) {
@@ -107,7 +112,7 @@ public class SearchListFragment extends Fragment {
      * @param view
      */
     private void setSearchKeywordEditText(final View view) {
-        searchKeywordEditText = (EditText) view.findViewById(R.id.editText);
+        searchKeywordEditText = (EditText) view.findViewById(R.id.search_keyword_edit_text);
         searchKeywordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
@@ -123,6 +128,13 @@ public class SearchListFragment extends Fragment {
                 return false;
             }
         });
+        searchKeywordEditText.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                dismissNotFoundSnackBar();
+                return false;
+            }
+        });
     }
 
     /**
@@ -130,6 +142,7 @@ public class SearchListFragment extends Fragment {
      * @param textView
      */
     private void searchFromText(TextView textView) {
+        dismissNotFoundSnackBar();
         offset = 0;
 
         Realm realm = Realm.getDefaultInstance();
@@ -158,12 +171,16 @@ public class SearchListFragment extends Fragment {
                     public void onCompleted() {
                         swipeRefreshLayout.setRefreshing(false);
                         progressDialog.dismiss();
+                        if (adapter.getCount() == 0) {
+                            showNotFoundSnackBar(getActivity().getString(R.string.search_video_not_found));
+                        }
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         Log.e("ERROR", e.toString());
                         progressDialog.dismiss();
+                        showNotFoundSnackBar(getActivity().getString(R.string.search_user_not_found));
                     }
 
                     @Override
@@ -223,4 +240,32 @@ public class SearchListFragment extends Fragment {
                 }
             }
     );
+
+    /**
+     * 検索結果がなかった場合のスナックバーを表示する。
+     * @param message 表示するメッセージ
+     */
+    private void showNotFoundSnackBar(String message) {
+        if (notFoundSnackBar == null) {
+            notFoundSnackBar = Snackbar.make(searchListLayout, message, Snackbar.LENGTH_INDEFINITE)
+                    .setAction(getActivity().getString(R.string.not_found_snack_bar_dissmiss_button), new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            notFoundSnackBar.dismiss();
+                        }
+                    });
+        }
+        notFoundSnackBar.show();
+    }
+
+    /**
+     * 検索結果がなかった場合のスナックバーを消す。
+     */
+    private void dismissNotFoundSnackBar() {
+        if (notFoundSnackBar != null) {
+            notFoundSnackBar.dismiss();
+            notFoundSnackBar = null;
+        }
+
+    }
 }
