@@ -1,6 +1,5 @@
 package jp.co.wakawaka.tumvie.searchlist;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,11 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout;
@@ -48,13 +44,9 @@ public class SearchListFragment extends Fragment {
 
     /** テスト用tumblrアカウントメモ：edielec */
 
-    private static final int SEARCH_TARGET_BLOG = 0;
-    private static final int SEARCH_TARGET_TAG = 1;
-
     private static final Object LOCK = new Object();
 
     private JumblrClient jumblrClient;
-    private int searchTarget;
     private String searchText;
     private InputMethodManager inputMethodManager;
 
@@ -83,7 +75,6 @@ public class SearchListFragment extends Fragment {
 
         inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 
-        setSearchSpinner(view);
         setSearchText(view);
 
         // リストビューを取得
@@ -103,28 +94,6 @@ public class SearchListFragment extends Fragment {
         progressDialog.setCancelable(false);
 
         return view;
-    }
-
-    private void setSearchSpinner(View view) {
-        // スピナー設定
-        Spinner spinner = (Spinner) view.findViewById(R.id.spinner);
-        // ArrayAdapter を、string-array とデフォルトのレイアウトを引数にして生成
-        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(
-                getContext(), R.array.search_targets, android.R.layout.simple_spinner_item);
-        // 選択肢が表示された時に使用するレイアウトを指定
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // スピナーにアダプターを設定
-        spinner.setAdapter(spinnerAdapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Spinner spinner = (Spinner) adapterView;
-                searchTarget = (int) spinner.getSelectedItemId();
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-            }
-        });
     }
 
     private void setSearchText(final View view) {
@@ -229,13 +198,7 @@ public class SearchListFragment extends Fragment {
                     options.put("type", CallbackActivity.POST_TYPE_VIDEO);
                     options.put("limit", LIMIT);
                     options.put("offset", offset);
-                    if (SEARCH_TARGET_BLOG == searchTarget) {
-                        Log.e("options", options.toString());
-                        return requestBuilder.get("/blog/" + searchText + "/posts", options).getPosts();
-                    } else {
-                        options.put("tag", searchText);
-                        return requestBuilder.get("/tagged", options).getPosts();
-                    }
+                    return requestBuilder.get("/blog/" + searchText + "/posts", options).getPosts();
                 }
             }
     );
