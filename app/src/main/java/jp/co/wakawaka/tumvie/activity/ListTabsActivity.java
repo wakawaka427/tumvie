@@ -25,6 +25,19 @@ import jp.co.wakawaka.tumvie.searchlist.SearchListFragment;
 
 public class ListTabsActivity extends AppCompatActivity {
 
+    private enum Tab {
+        FAVORITE(0),
+        SEARCH(1),
+        HISTOR(2);
+        private final int id;
+        Tab(final int id) {
+            this.id = id;
+        }
+        public int getValue() {
+            return this.id;
+        }
+    }
+
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -33,27 +46,30 @@ public class ListTabsActivity extends AppCompatActivity {
      * may be best to switch to a
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
-    private SectionsPagerAdapter mSectionsPagerAdapter;
+    private SectionsPagerAdapter sectionsPagerAdapter;
 
-    private TabLayout mTabLayout;
+    private TabLayout tabLayout;
     /**
      * The {@link ViewPager} that will host the section contents.
      */
-    private ViewPager mViewPager;
+    private ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_tabs);
 
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this).build();
+        Realm.setDefaultConfiguration(realmConfiguration);
+
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        sectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        viewPager = (ViewPager) findViewById(R.id.container);
+        viewPager.setAdapter(sectionsPagerAdapter);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
@@ -73,14 +89,14 @@ public class ListTabsActivity extends AppCompatActivity {
             }
         });
 
-        mViewPager.setCurrentItem(1);
+        viewPager.setCurrentItem(Tab.SEARCH.getValue());
 
-        mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        mTabLayout.setTabsFromPagerAdapter(mSectionsPagerAdapter);
-        mTabLayout.setupWithViewPager(mViewPager);
-        mTabLayout.getTabAt(0).setIcon(R.drawable.icon_favorite);
-        mTabLayout.getTabAt(1).setIcon(R.drawable.icon_search);
-        mTabLayout.getTabAt(2).setIcon(R.drawable.icon_history);
+        tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout.setTabsFromPagerAdapter(sectionsPagerAdapter);
+        tabLayout.setupWithViewPager(viewPager);
+        tabLayout.getTabAt(Tab.FAVORITE.getValue()).setIcon(R.drawable.icon_favorite);
+        tabLayout.getTabAt(Tab.SEARCH.getValue()).setIcon(R.drawable.icon_search);
+        tabLayout.getTabAt(Tab.HISTOR.getValue()).setIcon(R.drawable.icon_history);
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -91,9 +107,6 @@ public class ListTabsActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-
-        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this).build();
-        Realm.setDefaultConfiguration(realmConfiguration);
     }
 
 
@@ -131,9 +144,9 @@ public class ListTabsActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            if (position == 0) {
+            if (Tab.HISTOR.getValue() == position) {
                 return new FavoriteListFragment();
-            } else if (position == 1) {
+            } else if (Tab.SEARCH.getValue() == position) {
                 return new SearchListFragment();
             } else {
                 return new HistoryListFragment();
@@ -142,8 +155,7 @@ public class ListTabsActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            // Show 3 total pages.
-            return 3;
+            return Tab.values().length;
         }
 
         @Override

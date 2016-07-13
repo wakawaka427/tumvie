@@ -5,6 +5,7 @@ import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 /**
+ * 検索リストのモデルクラス
  * Created by wakabayashieisuke on 2016/07/11.
  */
 public class History extends RealmObject {

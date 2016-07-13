@@ -44,18 +44,17 @@ public class SearchListFragment extends Fragment {
 
     /** テスト用tumblrアカウントメモ：edielec */
 
-    private static final Object LOCK = new Object();
-
     private JumblrClient jumblrClient;
-    private String searchText;
     private InputMethodManager inputMethodManager;
+    private CustomProgressDialog progressDialog;
+
+    private int offset = 0;
 
     private SearchListViewAdapter adapter;
     private ListView searchList;
-    private int offset = 0;
-    private CustomProgressDialog progressDialog;
 
-    private SwipyRefreshLayout mSwipeRefreshLayout;
+    private SwipyRefreshLayout swipeRefreshLayout;
+    private EditText searchKeywordEditText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,17 +74,16 @@ public class SearchListFragment extends Fragment {
 
         inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 
-        setSearchText(view);
+        setSearchKeywordEditText(view);
 
         // リストビューを取得
         searchList = (ListView) view.findViewById(R.id.search_list);
-
-        mSwipeRefreshLayout = (SwipyRefreshLayout) view.findViewById(R.id.refresh);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipyRefreshLayout.OnRefreshListener() {
+        swipeRefreshLayout = (SwipyRefreshLayout) view.findViewById(R.id.refresh);
+        swipeRefreshLayout.setOnRefreshListener(new SwipyRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh(SwipyRefreshLayoutDirection direction) {
                 if (SwipyRefreshLayoutDirection.BOTTOM.equals(direction)) {
-                    subscribeVideo();
+                    subscribeGetVideoList();
                 }
             }
         });
@@ -96,9 +94,21 @@ public class SearchListFragment extends Fragment {
         return view;
     }
 
-    private void setSearchText(final View view) {
-        EditText textView = (EditText) view.findViewById(R.id.editText);
-        textView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+    /**
+     * 履歴キーワードを元に検索を行う（Activityから呼び出されるメソッド）
+     * @param hitosryKeyword
+     */
+    public void searchFromHistoryKeywird(String hitosryKeyword) {
+        searchKeywordEditText.setText(hitosryKeyword);
+    }
+
+    /**
+     * 検索よ用EditTextの初期設定を行う。
+     * @param view
+     */
+    private void setSearchKeywordEditText(final View view) {
+        searchKeywordEditText = (EditText) view.findViewById(R.id.editText);
+        searchKeywordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (i == EditorInfo.IME_ACTION_SEARCH ||
@@ -106,19 +116,7 @@ public class SearchListFragment extends Fragment {
                         keyEvent.getAction() == KeyEvent.ACTION_DOWN &&
                                 keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
                     if (!keyEvent.isShiftPressed()) {
-                        offset = 0;
-                        searchText = String.valueOf(textView.getText());
-
-                        Realm realm = Realm.getDefaultInstance();
-                        realm.beginTransaction();
-                        History history = realm.createObject(History.class);
-                        history.setValue(searchText);
-                        realm.commitTransaction();
-
-                        adapter = new SearchListViewAdapter(searchList.getContext());
-                        searchList.setAdapter(adapter);
-                        subscribeVideo();
-                        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                        searchFromText(textView);
                         return true;
                     }
                 }
@@ -127,36 +125,59 @@ public class SearchListFragment extends Fragment {
         });
     }
 
-    private void subscribeVideo() {
-        synchronized (LOCK) {
-            if (adapter.getCount() == 0) {
-                progressDialog.show();
-            }
-            videoObservable.subscribeOn(Schedulers.newThread())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Observer<Item>() {
-                        @Override
-                        public void onCompleted() {
-                            mSwipeRefreshLayout.setRefreshing(false);
-                            progressDialog.dismiss();
-                        }
+    /**
+     * 入力したキーワードによる検索処理を実行する。
+     * @param textView
+     */
+    private void searchFromText(TextView textView) {
+        offset = 0;
 
-                        @Override
-                        public void onError(Throwable e) {
-                            Log.e("ERROR", e.toString());
-                            progressDialog.dismiss();
-                        }
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        History history = realm.createObject(History.class);
+        history.setValue(String.valueOf(textView.getText()));
+        realm.commitTransaction();
 
-                        @Override
-                        public void onNext(Item item) {
-                            item.userName = "dummy";
-                            adapter.add(item);
-                        }
-                    });
-        }
+        adapter = new SearchListViewAdapter(searchList.getContext());
+        searchList.setAdapter(adapter);
+        subscribeGetVideoList();
+        inputMethodManager.hideSoftInputFromWindow(textView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
-    private Observable<Item> videoObservable = Observable.create(
+    /**
+     * 動画リストAPIの呼び出しを申し込む。
+     */
+    private void subscribeGetVideoList() {
+        if (adapter.getCount() == 0) {
+            progressDialog.show();
+        }
+        videoListObservable.subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Item>() {
+                    @Override
+                    public void onCompleted() {
+                        swipeRefreshLayout.setRefreshing(false);
+                        progressDialog.dismiss();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e("ERROR", e.toString());
+                        progressDialog.dismiss();
+                    }
+
+                    @Override
+                    public void onNext(Item item) {
+                        item.userName = "dummy";
+                        adapter.add(item);
+                    }
+                });
+    }
+
+    /**
+     * 動画リストAPI呼び出し用Observable
+     */
+    private Observable<Item> videoListObservable = Observable.create(
             new Observable.OnSubscribe<Item>() {
                 private static final int LIMIT = 10;
                 @Override
@@ -198,7 +219,7 @@ public class SearchListFragment extends Fragment {
                     options.put("type", CallbackActivity.POST_TYPE_VIDEO);
                     options.put("limit", LIMIT);
                     options.put("offset", offset);
-                    return requestBuilder.get("/blog/" + searchText + "/posts", options).getPosts();
+                    return requestBuilder.get("/blog/" + String.valueOf(searchKeywordEditText.getText()) + "/posts", options).getPosts();
                 }
             }
     );

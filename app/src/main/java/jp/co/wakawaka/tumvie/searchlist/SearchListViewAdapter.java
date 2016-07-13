@@ -1,9 +1,6 @@
 package jp.co.wakawaka.tumvie.searchlist;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +14,11 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-import jp.co.wakawaka.tumvie.BitmapFromUrl;
 import jp.co.wakawaka.tumvie.R;
 import jp.co.wakawaka.tumvie.listfragmenttest.Item;
 
 /**
+ * 動画リスト用Adapter
  * Created by wakabayashieisuke on 2016/07/07.
  */
 public class SearchListViewAdapter extends BaseAdapter {
@@ -70,7 +67,6 @@ public class SearchListViewAdapter extends BaseAdapter {
             Picasso.with(context).load(videoThumbnailUrl).into(thumbnailImageView, new Callback() {
                 @Override
                 public void onSuccess() {
-
                 }
 
                 @Override
