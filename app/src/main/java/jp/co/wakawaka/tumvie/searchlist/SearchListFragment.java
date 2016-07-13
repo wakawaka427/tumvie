@@ -3,7 +3,6 @@ package jp.co.wakawaka.tumvie.searchlist;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -18,6 +17,8 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout;
+import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayoutDirection;
 import com.tumblr.jumblr.JumblrClient;
 import com.tumblr.jumblr.request.RequestBuilder;
 import com.tumblr.jumblr.types.Post;
@@ -29,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
 import jp.co.wakawaka.tumvie.BuildConfig;
 import jp.co.wakawaka.tumvie.R;
 import jp.co.wakawaka.tumvie.activity.CallbackActivity;
@@ -61,7 +61,7 @@ public class SearchListFragment extends Fragment {
     private ListView searchList;
     private int offset = 0;
 
-    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private SwipyRefreshLayout mSwipeRefreshLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -86,22 +86,14 @@ public class SearchListFragment extends Fragment {
 
         // リストビューを取得
         searchList = (ListView) view.findViewById(R.id.search_list);
-//        searchList.setOnScrollListener(new EndlessScrollListener() {
-//            @Override
-//            public boolean onLoadMore(int totalItemsCount) {
-//                if (offset == 0) {
-//                    return true;
-//                }
-//                subscribeVideo();
-//                return true;
-//            }
-//        });
 
-        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        mSwipeRefreshLayout = (SwipyRefreshLayout) view.findViewById(R.id.refresh);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipyRefreshLayout.OnRefreshListener() {
             @Override
-            public void onRefresh() {
-                subscribeVideo();
+            public void onRefresh(SwipyRefreshLayoutDirection direction) {
+                if (SwipyRefreshLayoutDirection.BOTTOM.equals(direction)) {
+                    subscribeVideo();
+                }
             }
         });
 
@@ -168,8 +160,6 @@ public class SearchListFragment extends Fragment {
                     .subscribe(new Observer<Item>() {
                         @Override
                         public void onCompleted() {
-//                        searchList.setAdapter(adapter);
-                            mSwipeRefreshLayout.isNestedScrollingEnabled();
                             mSwipeRefreshLayout.setRefreshing(false);
                         }
 
