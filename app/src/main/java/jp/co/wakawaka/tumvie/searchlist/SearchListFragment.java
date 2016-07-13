@@ -1,5 +1,6 @@
 package jp.co.wakawaka.tumvie.searchlist;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -60,6 +61,7 @@ public class SearchListFragment extends Fragment {
     private SearchListViewAdapter adapter;
     private ListView searchList;
     private int offset = 0;
+    private CustomProgressDialog progressDialog;
 
     private SwipyRefreshLayout mSwipeRefreshLayout;
 
@@ -96,6 +98,9 @@ public class SearchListFragment extends Fragment {
                 }
             }
         });
+
+        progressDialog = new CustomProgressDialog(getActivity());
+        progressDialog.setCancelable(false);
 
         return view;
     }
@@ -155,17 +160,22 @@ public class SearchListFragment extends Fragment {
 
     private void subscribeVideo() {
         synchronized (LOCK) {
+            if (adapter.getCount() == 0) {
+                progressDialog.show();
+            }
             videoObservable.subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Observer<Item>() {
                         @Override
                         public void onCompleted() {
                             mSwipeRefreshLayout.setRefreshing(false);
+                            progressDialog.dismiss();
                         }
 
                         @Override
                         public void onError(Throwable e) {
                             Log.e("ERROR", e.toString());
+                            progressDialog.dismiss();
                         }
 
                         @Override
