@@ -15,6 +15,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout;
@@ -58,7 +59,7 @@ public class SearchListFragment extends Fragment {
     private ListView searchList;
 
     private LinearLayout searchListLayout;
-    private SwipyRefreshLayout swipeRefreshLayout;
+    private ProgressBar searchListProgress;
     private EditText searchKeywordEditText;
 
     @Override
@@ -83,18 +84,21 @@ public class SearchListFragment extends Fragment {
         setSearchKeywordEditText(view);
         // リストビューを取得
         searchList = (ListView) view.findViewById(R.id.search_list);
-        swipeRefreshLayout = (SwipyRefreshLayout) view.findViewById(R.id.search_list_refresh);
-        swipeRefreshLayout.setOnRefreshListener(new SwipyRefreshLayout.OnRefreshListener() {
+
+        searchList.setOnScrollListener(new EndlessScrollListener() {
             @Override
-            public void onRefresh(SwipyRefreshLayoutDirection direction) {
-                if (SwipyRefreshLayoutDirection.BOTTOM.equals(direction)) {
-                    subscribeGetVideoList();
+            public boolean onLoadMore(int totalItemsCount) {
+                if (offset == 0) {
+                    return true;
                 }
+                subscribeGetVideoList();
+                return true;
             }
         });
 
         progressDialog = new CustomProgressDialog(getActivity());
         progressDialog.setCancelable(false);
+        searchListProgress = (ProgressBar) view.findViewById(R.id.search_list_progress);
 
         return view;
     }
@@ -163,13 +167,15 @@ public class SearchListFragment extends Fragment {
     private void subscribeGetVideoList() {
         if (adapter.getCount() == 0) {
             progressDialog.show();
+        } else {
+            searchListProgress.setVisibility(View.VISIBLE);
         }
         videoListObservable.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Item>() {
                     @Override
                     public void onCompleted() {
-                        swipeRefreshLayout.setRefreshing(false);
+                        searchListProgress.setVisibility(View.GONE);
                         progressDialog.dismiss();
                         if (adapter.getCount() == 0) {
                             showNotFoundSnackBar(getActivity().getString(R.string.search_video_not_found));
@@ -179,6 +185,7 @@ public class SearchListFragment extends Fragment {
                     @Override
                     public void onError(Throwable e) {
                         Log.e("ERROR", e.toString());
+                        searchListProgress.setVisibility(View.GONE);
                         progressDialog.dismiss();
                         showNotFoundSnackBar(getActivity().getString(R.string.search_user_not_found));
                     }

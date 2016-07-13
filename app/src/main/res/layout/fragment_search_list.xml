@@ -28,17 +28,25 @@
 
     </LinearLayout>
 
-    <com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/search_list_refresh"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:srl_direction="bottom">
+        android:layout_gravity="center_horizontal">
+
         <ListView
             android:id="@+id/search_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             />
-    </com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout>
+
+        <ProgressBar
+            android:visibility="gone"
+            android:id="@+id/search_list_progress"
+            style="@style/Base.Widget.AppCompat.ProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:max="10000" />
+    </FrameLayout>
 
 </LinearLayout>
