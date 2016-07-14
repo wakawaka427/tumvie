@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:focusable="true"
+    android:focusable="false"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:paddingTop="10dp"
@@ -14,18 +14,15 @@
     <TextView
         android:id="@+id/history_search_keyword"
         android:textSize="16dp"
-        android:layout_centerVertical="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
 
     <ImageButton
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:id="@+id/trush_button"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
+        android:id="@+id/trash_button"
         android:scaleType="fitXY"
-        android:background="@null"
-        android:src="@drawable/icon_trash"/>
+        android:background="@null"/>
 
-</RelativeLayout>
+</LinearLayout>

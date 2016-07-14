@@ -76,12 +76,7 @@ public class ListTabsActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 if (position == 2) {
-                    List<Fragment> fragments = getSupportFragmentManager().getFragments();
-                    for(Fragment f: fragments) {
-                        if (f instanceof HistoryListFragment) {
-                            ((HistoryListFragment) f).reloadList();
-                        }
-                    }
+                    ((HistoryListFragment) sectionsPagerAdapter.getItem(position)).reloadList();
                 }
             }
             @Override
@@ -138,19 +133,15 @@ public class ListTabsActivity extends AppCompatActivity {
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
+        Fragment[] fragments = {new FavoriteListFragment(), new SearchListFragment(), new HistoryListFragment()};
+
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
         @Override
         public Fragment getItem(int position) {
-            if (Tab.FAVORITE.getValue() == position) {
-                return new FavoriteListFragment();
-            } else if (Tab.SEARCH.getValue() == position) {
-                return new SearchListFragment();
-            } else {
-                return new HistoryListFragment();
-            }
+            return fragments[position];
         }
 
         @Override
