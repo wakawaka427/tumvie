@@ -145,7 +145,7 @@ public class ItemFragment extends Fragment {
                         List<Item> items = new ArrayList<>();
                         for (int i = 0; i < 20; i++) {
                             Item item = new Item();
-                            item.userName = "test";
+                            item.sourceBlogName = "test";
                             item.videoThumbnailBitmap = captureImageBitmap;
                             items.add(item);
                         }
@@ -204,7 +204,7 @@ public class ItemFragment extends Fragment {
                     }
                     @Override
                     public void onNext(Item item) {
-                        item.userName = "dummy";
+                        item.sourceBlogName = "dummy";
                         items.add(item);
                     }
                 });

@@ -55,11 +55,16 @@ public class SearchListViewAdapter extends BaseAdapter {
 
         Item item = itemList.get(position);
 
-        ((TextView) convertView.findViewById(R.id.debug_thumbnail_url)).setText("URL:" + item.videoThumbnailUrl);
-        ((TextView) convertView.findViewById(R.id.debug_id)).setText("Id:" + item.postId);
+//        ((TextView) convertView.findViewById(R.id.debug_thumbnail_url)).setText("URL:" + item.videoThumbnailUrl);
+//        ((TextView) convertView.findViewById(R.id.debug_id)).setText("Id:" + item.postId);
+        if (item.sourceBlogName == null || "".equals(item.sourceBlogName)) {
+            ((TextView) convertView.findViewById(R.id.search_list_source_blog_name_text)).setVisibility(View.GONE);
+        } else {
+            ((TextView) convertView.findViewById(R.id.search_list_source_blog_name_text)).setVisibility(View.VISIBLE);
+            ((TextView) convertView.findViewById(R.id.search_list_source_blog_name_text)).setText(item.sourceBlogName);
+        }
 
         ImageView thumbnailImageView = (ImageView) convertView.findViewById(R.id.fragment_search_list_thumbnail);
-
         // ImageViewにタグをつけておいて、同じURLじゃなかったら表示する
         if (thumbnailImageView.getTag() == null ||
                 !thumbnailImageView.getTag().equals(item.videoThumbnailUrl)) {

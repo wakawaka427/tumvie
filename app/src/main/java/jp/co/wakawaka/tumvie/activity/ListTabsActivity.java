@@ -15,8 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import java.util.List;
-
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import jp.co.wakawaka.tumvie.R;
@@ -136,18 +134,27 @@ public class ListTabsActivity extends AppCompatActivity {
     }
 
     /**
+     * ブログ名クリック処理
+     * @param view View
+     */
+    public void onClickSearchListBlogName(View view) {
+        String keyword = String.valueOf(((TextView) view).getText());
+        ((SearchListFragment) sectionsPagerAdapter.getItem(Tab.SEARCH.getValue())).searchFromKeyword(keyword);
+    }
+
+    /**
      * 履歴画面の検索キーワードクリック処理
-     * @param view
+     * @param view View
      */
     public void onClickHistorySearchKeyword(View view) {
         String keyword = String.valueOf(((TextView) view).getText());
         viewPager.setCurrentItem(Tab.SEARCH.getValue());
-        ((SearchListFragment) sectionsPagerAdapter.getItem(Tab.SEARCH.getValue())).searchFromHistoryKeywird(keyword);
+        ((SearchListFragment) sectionsPagerAdapter.getItem(Tab.SEARCH.getValue())).searchFromKeyword(keyword);
     }
 
     /**
      * 履歴画面の削除ボタンクリック処理
-     * @param view
+     * @param view View
      */
     public void onClickHistoryDeleteButton(View view) {
         ((HistoryListFragment) sectionsPagerAdapter.getItem(Tab.HISTOR.getValue())).deleteHistory((long) view.getTag());

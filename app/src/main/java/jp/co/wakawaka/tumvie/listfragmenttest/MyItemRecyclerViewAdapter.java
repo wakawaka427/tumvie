@@ -57,7 +57,7 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mUserName.setText(mValues.get(position).userName);
+        holder.mUserName.setText(mValues.get(position).sourceBlogName);
 //        holder.mVideoCapture.setImageBitmap(mValues.get(position).videoCaptureImageBitmap);
         playVideo(holder, position);
 

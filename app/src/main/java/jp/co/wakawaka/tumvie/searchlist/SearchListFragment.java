@@ -101,10 +101,10 @@ public class SearchListFragment extends Fragment {
 
     /**
      * 履歴キーワードを元に検索を行う（Activityから呼び出されるメソッド）
-     * @param hitosryKeyword
+     * @param keyword keyword
      */
-    public void searchFromHistoryKeywird(String hitosryKeyword) {
-        searchKeywordEditText.setText(hitosryKeyword);
+    public void searchFromKeyword(String keyword) {
+        searchKeywordEditText.setText(keyword);
         searchFromText();
     }
 
@@ -196,7 +196,6 @@ public class SearchListFragment extends Fragment {
 
                     @Override
                     public void onNext(Item item) {
-                        item.userName = "dummy";
                         adapter.add(item);
                     }
                 });
@@ -226,11 +225,13 @@ public class SearchListFragment extends Fragment {
                             if (b[1].contains("www.youtube.com")) {
                                 // TODO：youtubeはvideoviewで再生できない。youtubeapiが必要
                                 // TODO：vineも無理。現段階で確認しているのはこの２つ
+                                // TODO：youtubeの場合そもそもvideo.getEmbededCode()で"false"が返る
                                 continue;
                             }
                             Item item = new Item();
                             item.videoThumbnailUrl = videoPost.getThumbnailUrl();
                             item.videoUrl = b[1];
+                            item.sourceBlogName = videoPost.getSourceTitle();
                             item.postId = String.valueOf(videoPost.getId());
                             subscriber.onNext(item);
                             // 1つの動画に3つのサイズ(250,400,500)がある。暫定で一番小さいのを再生してbreak
