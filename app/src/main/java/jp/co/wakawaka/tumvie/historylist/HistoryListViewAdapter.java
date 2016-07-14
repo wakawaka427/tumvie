@@ -3,6 +3,10 @@ package jp.co.wakawaka.tumvie.historylist;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.VectorDrawable;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,13 +27,19 @@ public class HistoryListViewAdapter extends BaseAdapter {
     Context context;
     LayoutInflater layoutInflater;
     List<History> histories;
-    Bitmap iconTrach;
+    Bitmap iconTrash;
 
     public HistoryListViewAdapter(Context context, List<History> histories) {
         this.context = context;
-        this.histories = histories;
         this.layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.iconTrach = BitmapFactory.decodeResource(context.getResources(), R.drawable.icon_trash);
+        this.histories = histories;
+        Drawable vectorDrawable = ContextCompat.getDrawable(context, R.drawable.icon_trash);
+        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(),
+                vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        vectorDrawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        vectorDrawable.draw(canvas);
+        this.iconTrash = bitmap;
     }
 
     @Override
@@ -44,7 +54,7 @@ public class HistoryListViewAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        return histories.get(position).id;
+        return histories.get(position).getId();
     }
 
     @Override
@@ -54,16 +64,16 @@ public class HistoryListViewAdapter extends BaseAdapter {
             convertView = layoutInflater.inflate(R.layout.fragment_history_list_item, null);
             holder = new ViewHolder();
             holder.historySearchKeyword = (TextView) convertView.findViewById(R.id.history_search_keyword);
-            holder.trashButton = (ImageButton) convertView.findViewById(R.id.trash_button);
-            holder.trashButton.setImageBitmap(iconTrach);
+            holder.trashButton = (ImageButton) convertView.findViewById(R.id.history_trash_button);
+            holder.trashButton.setImageBitmap(iconTrash);
             convertView.setTag(holder);
-        }
-        else {
+        } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        History history = (History) getItem(position);
+        final History history = (History) getItem(position);
         holder.historySearchKeyword.setText(history.getKeyword());
+        holder.trashButton.setTag(history.getId());
 
         return convertView;
     }

@@ -76,8 +76,6 @@ public class SearchListFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_search_list, container, false);
 
-        inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-
         searchListLayout = (LinearLayout) view.findViewById(R.id.search_list_layout);
         setSearchKeywordEditText(view);
         // リストビューを取得
@@ -107,10 +105,19 @@ public class SearchListFragment extends Fragment {
      */
     public void searchFromHistoryKeywird(String hitosryKeyword) {
         searchKeywordEditText.setText(hitosryKeyword);
+        searchFromText();
     }
 
     /**
-     * 検索よ用EditTextの初期設定を行う。
+     * ソフトウェアキーボードを非表示にする
+     */
+    public void onFocusLoss() {
+        dissmissKeyboard();
+        dismissNotFoundSnackBar();
+    }
+
+    /**
+     * 検索用EditTextの初期設定を行う。
      * @param view
      */
     private void setSearchKeywordEditText(final View view) {
@@ -123,7 +130,7 @@ public class SearchListFragment extends Fragment {
                         keyEvent.getAction() == KeyEvent.ACTION_DOWN &&
                                 keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
                     if (!keyEvent.isShiftPressed()) {
-                        searchFromText(textView);
+                        searchFromText();
                         return true;
                     }
                 }
@@ -141,22 +148,21 @@ public class SearchListFragment extends Fragment {
 
     /**
      * 入力したキーワードによる検索処理を実行する。
-     * @param textView
      */
-    private void searchFromText(TextView textView) {
+    private void searchFromText() {
         dismissNotFoundSnackBar();
         offset = 0;
 
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
         History history = realm.createObject(History.class);
-        history.setValue(String.valueOf(textView.getText()));
+        history.setValue(String.valueOf(searchKeywordEditText.getText()));
         realm.commitTransaction();
 
         adapter = new SearchListViewAdapter(searchList.getContext());
         searchList.setAdapter(adapter);
         subscribeGetVideoList();
-        inputMethodManager.hideSoftInputFromWindow(textView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        dissmissKeyboard();
     }
 
     /**
@@ -271,6 +277,15 @@ public class SearchListFragment extends Fragment {
             notFoundSnackBar.dismiss();
             notFoundSnackBar = null;
         }
+    }
 
+    /**
+     * キーボードを消す。
+     */
+    private void dissmissKeyboard() {
+        if (inputMethodManager == null) {
+            inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        }
+        inputMethodManager.hideSoftInputFromWindow(searchKeywordEditText.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 }

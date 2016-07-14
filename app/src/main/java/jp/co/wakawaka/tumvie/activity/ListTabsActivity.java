@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -62,6 +63,15 @@ public class ListTabsActivity extends AppCompatActivity {
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this).build();
         Realm.setDefaultConfiguration(realmConfiguration);
 
+        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         sectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -75,8 +85,16 @@ public class ListTabsActivity extends AppCompatActivity {
             }
             @Override
             public void onPageSelected(int position) {
-                if (position == 2) {
+                if (Tab.HISTOR.getValue() == position) {
                     ((HistoryListFragment) sectionsPagerAdapter.getItem(position)).reloadList();
+                    fab.setVisibility(View.VISIBLE);
+                } else {
+                    // 履歴画面以外では邪魔なのでFloatingActionButtonを消しておく。
+                    fab.setVisibility(View.GONE);
+                }
+                if (Tab.SEARCH.getValue() != position) {
+                    // 検索画面から他のタブに移動するときにキーボードが表示されたままになるので消す。
+                    ((SearchListFragment) sectionsPagerAdapter.getItem(Tab.SEARCH.getValue())).onFocusLoss();
                 }
             }
             @Override
@@ -92,16 +110,6 @@ public class ListTabsActivity extends AppCompatActivity {
         tabLayout.getTabAt(Tab.FAVORITE.getValue()).setIcon(R.drawable.icon_favorite);
         tabLayout.getTabAt(Tab.SEARCH.getValue()).setIcon(R.drawable.icon_search);
         tabLayout.getTabAt(Tab.HISTOR.getValue()).setIcon(R.drawable.icon_history);
-
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
     }
 
 
@@ -125,6 +133,24 @@ public class ListTabsActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * 履歴画面の検索キーワードクリック処理
+     * @param view
+     */
+    public void onClickHistorySearchKeyword(View view) {
+        String keyword = String.valueOf(((TextView) view).getText());
+        viewPager.setCurrentItem(Tab.SEARCH.getValue());
+        ((SearchListFragment) sectionsPagerAdapter.getItem(Tab.SEARCH.getValue())).searchFromHistoryKeywird(keyword);
+    }
+
+    /**
+     * 履歴画面の削除ボタンクリック処理
+     * @param view
+     */
+    public void onClickHistoryDeleteButton(View view) {
+        ((HistoryListFragment) sectionsPagerAdapter.getItem(Tab.HISTOR.getValue())).deleteHistory((long) view.getTag());
     }
 
     /**

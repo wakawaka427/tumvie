@@ -5,4 +5,13 @@
     <dimen name="text_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="appbar_padding_top">8dp</dimen>
+
+    <dimen name="margin_s">8dp</dimen>
+    <dimen name="margin_m">16dp</dimen>
+
+    <dimen name="text_size_sss">16sp</dimen>
+    <dimen name="text_size_ss">20sp</dimen>
+    <dimen name="text_size_s">24sp</dimen>
+    <dimen name="text_size_m">34sp</dimen>
+    <dimen name="text_size_l">45sp</dimen>
 </resources>

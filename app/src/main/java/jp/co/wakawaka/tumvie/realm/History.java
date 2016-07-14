@@ -10,7 +10,7 @@ import io.realm.annotations.PrimaryKey;
  */
 public class History extends RealmObject {
     @PrimaryKey
-    public long id;
+    private long id;
 
     private String keyword;
     private long currentTimeMillis;
@@ -23,6 +23,10 @@ public class History extends RealmObject {
         this.id = Realm.getDefaultInstance().where(History.class).max("id").intValue() + 1;
         this.keyword = keyword;
         this.currentTimeMillis = System.currentTimeMillis();
+    }
+
+    public long getId() {
+        return this.id;
     }
 
     public String getKeyword() {

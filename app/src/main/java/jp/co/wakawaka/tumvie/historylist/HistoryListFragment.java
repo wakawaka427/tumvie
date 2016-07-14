@@ -21,6 +21,7 @@ public class HistoryListFragment extends Fragment {
 
     private Realm realm;
     private View view;
+    private HistoryListViewAdapter historyListAdapter;
     private ListView historyList;
 
     @Override
@@ -45,10 +46,8 @@ public class HistoryListFragment extends Fragment {
         RealmResults<History> histories = realm
                 .where(History.class)
                 .findAllSorted("currentTimeMillis", Sort.DESCENDING);
-        if (histories != null && histories.size() != 0) {
-            HistoryListViewAdapter historyListAdapter = new HistoryListViewAdapter(historyList.getContext(), histories);
-            historyList.setAdapter(historyListAdapter);
-        }
+        historyListAdapter = new HistoryListViewAdapter(historyList.getContext(), histories);
+        historyList.setAdapter(historyListAdapter);
     }
 
     @Override
@@ -60,5 +59,22 @@ public class HistoryListFragment extends Fragment {
 //            throw new RuntimeException(context.toString()
 //                    + " must implement OnFragmentInteractionListener");
 //        }
+    }
+
+    /**
+     * 指定した行を削除する。
+     * @param id HistoryテーブルのID
+     */
+    public void deleteHistory(final long id) {
+        if (realm == null) {
+            realm = Realm.getDefaultInstance();
+        }
+        realm.beginTransaction();
+        History history = realm.where(History.class).equalTo("id", id).findFirst();
+        if (history != null) {
+            history.deleteFromRealm();
+        }
+        realm.commitTransaction();
+        reloadList();
     }
 }
