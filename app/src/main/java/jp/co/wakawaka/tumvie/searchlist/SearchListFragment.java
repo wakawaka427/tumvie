@@ -24,6 +24,8 @@ import com.tumblr.jumblr.types.Post;
 import com.tumblr.jumblr.types.Video;
 import com.tumblr.jumblr.types.VideoPost;
 
+import org.scribe.exceptions.OAuthConnectionException;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -153,16 +155,19 @@ public class SearchListFragment extends Fragment {
         dismissNotFoundSnackBar();
         offset = 0;
 
-        Realm realm = Realm.getDefaultInstance();
-        realm.beginTransaction();
-        History history = realm.createObject(History.class);
-        history.setValue(String.valueOf(searchKeywordEditText.getText()));
-        realm.commitTransaction();
+        String keyword = String.valueOf(searchKeywordEditText.getText());
+        if (keyword != null && !"".equals(keyword)) {
+            Realm realm = Realm.getDefaultInstance();
+            realm.beginTransaction();
+            History history = realm.createObject(History.class);
+            history.setValue(keyword);
+            realm.commitTransaction();
 
-        adapter = new SearchListViewAdapter(searchList.getContext());
-        searchList.setAdapter(adapter);
-        subscribeGetVideoList();
-        dissmissKeyboard();
+            adapter = new SearchListViewAdapter(searchList.getContext());
+            searchList.setAdapter(adapter);
+            subscribeGetVideoList();
+            dissmissKeyboard();
+        }
     }
 
     /**
@@ -191,7 +196,12 @@ public class SearchListFragment extends Fragment {
                         Log.e("ERROR", e.toString());
                         searchListProgress.setVisibility(View.GONE);
                         progressDialog.dismiss();
-                        showNotFoundSnackBar(getActivity().getString(R.string.search_user_not_found));
+                        if (e instanceof OAuthConnectionException) {
+                            // 機内モード等でネットワークに接続していない場合のエラー
+                            showNotFoundSnackBar(getActivity().getString(R.string.network_error_message));
+                        } else {
+                            showNotFoundSnackBar(getActivity().getString(R.string.search_user_not_found));
+                        }
                     }
 
                     @Override

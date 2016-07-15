@@ -20,7 +20,6 @@ import jp.co.wakawaka.tumvie.realm.History;
 public class HistoryListFragment extends Fragment {
 
     private Realm realm;
-    private View view;
     private HistoryListViewAdapter historyListAdapter;
     private ListView historyList;
 
@@ -33,13 +32,16 @@ public class HistoryListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_history_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_history_list, container, false);
         historyList = (ListView) view.findViewById(R.id.history_list);
 
         return view;
     }
 
     public void reloadList() {
+        if (historyList == null) {
+            historyList = (ListView) getActivity().findViewById(R.id.history_list);
+        }
         if (realm == null) {
             realm = Realm.getDefaultInstance();
         }

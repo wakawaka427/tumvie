@@ -161,6 +161,14 @@ public class ListTabsActivity extends AppCompatActivity {
     }
 
     /**
+     * キーワード削除ボタンタップ
+     * @param view
+     */
+    public void onClickSearchKeywordDeleteButton(View view) {
+        ((SearchListFragment) sectionsPagerAdapter.getItem(Tab.SEARCH.getValue())).searchFromKeyword("");
+    }
+
+    /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
