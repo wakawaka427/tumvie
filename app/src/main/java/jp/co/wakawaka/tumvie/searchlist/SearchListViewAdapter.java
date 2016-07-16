@@ -65,9 +65,10 @@ public class SearchListViewAdapter extends BaseAdapter {
         }
 
         ImageView thumbnailImageView = (ImageView) convertView.findViewById(R.id.fragment_search_list_thumbnail);
+        Item tagItem = (Item) thumbnailImageView.getTag();
         // ImageViewにタグをつけておいて、同じURLじゃなかったら表示する
-        if (thumbnailImageView.getTag() == null ||
-                !thumbnailImageView.getTag().equals(item.videoThumbnailUrl)) {
+        if (tagItem == null ||
+                !tagItem.videoThumbnailUrl.equals(item.videoThumbnailUrl)) {
             String videoThumbnailUrl = item.videoThumbnailUrl;
             Picasso.with(context).load(videoThumbnailUrl).into(thumbnailImageView, new Callback() {
                 @Override
@@ -79,7 +80,7 @@ public class SearchListViewAdapter extends BaseAdapter {
                     // TODO：No thumbnailみたいな画像をここで表示する
                 }
             });
-            thumbnailImageView.setTag(videoThumbnailUrl);
+            thumbnailImageView.setTag(item);
         }
 
         return convertView;

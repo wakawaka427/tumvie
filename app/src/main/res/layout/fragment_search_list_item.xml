@@ -15,13 +15,31 @@
         android:layout_height="wrap_content"
         android:id="@+id/debug_id" />
 
-    <TextView
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:textSize="@dimen/text_size_ss"
-        android:id="@+id/search_list_source_blog_name_text"
-        android:onClick="onClickSearchListBlogName"/>
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="8dp"
+            android:textSize="@dimen/text_size_ss"
+            android:id="@+id/search_list_source_blog_name_text"
+            android:onClick="onClickSearchListBlogName"/>
+
+        <ImageButton
+            android:id="@+id/search_favorite_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="8dp"
+            android:padding="8dp"
+            android:scaleType="fitXY"
+            android:background="@null"
+            android:src="@drawable/icon_favorite"
+            android:onClick="onClickSearchFavoriteButton"/>
+    </LinearLayout>
 
     <ImageView
         android:layout_width="match_parent"
@@ -29,6 +47,7 @@
         android:layout_marginBottom="8dp"
         android:id="@+id/fragment_search_list_thumbnail"
         android:layout_gravity="center"
-        android:contentDescription="@string/search_list_thumbnail_no_image"/>
+        android:contentDescription="@string/search_list_thumbnail_no_image"
+        android:onClick="onClickThumbnail"/>
 
 </LinearLayout>

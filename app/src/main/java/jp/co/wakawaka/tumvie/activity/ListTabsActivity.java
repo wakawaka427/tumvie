@@ -1,5 +1,6 @@
 package jp.co.wakawaka.tumvie.activity;
 
+import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -20,6 +21,7 @@ import io.realm.RealmConfiguration;
 import jp.co.wakawaka.tumvie.R;
 import jp.co.wakawaka.tumvie.favoritelist.FavoriteListFragment;
 import jp.co.wakawaka.tumvie.historylist.HistoryListFragment;
+import jp.co.wakawaka.tumvie.listfragmenttest.Item;
 import jp.co.wakawaka.tumvie.searchlist.SearchListFragment;
 
 public class ListTabsActivity extends AppCompatActivity {
@@ -162,10 +164,26 @@ public class ListTabsActivity extends AppCompatActivity {
 
     /**
      * キーワード削除ボタンタップ
-     * @param view
+     * @param view View
      */
     public void onClickSearchKeywordDeleteButton(View view) {
         ((SearchListFragment) sectionsPagerAdapter.getItem(Tab.SEARCH.getValue())).searchFromKeyword("");
+    }
+
+
+    public void onClickSearchFavoriteButton(View view) {
+
+    }
+
+    /**
+     * ビデオ再生
+     * @param view View
+     */
+    public void onClickThumbnail(View view) {
+        Item item = (Item) view.getTag();
+        Intent intent = new Intent(this, VideoActivity.class);
+        intent.putExtra("videoUrl", item.videoUrl);
+        startActivity(intent);
     }
 
     /**

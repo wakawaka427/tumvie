@@ -223,29 +223,26 @@ public class SearchListFragment extends Fragment {
                     offset += LIMIT;
                     for (Post post : posts) {
                         VideoPost videoPost = (VideoPost) post;
-                        if (videoPost.getThumbnailUrl() == null || "".equals(videoPost.getThumbnailUrl()))  {
+                        if (videoPost.getThumbnailUrl() == null || "".equals(videoPost.getThumbnailUrl())) {
                             // サムネイルのないものは表示しない。（vineやinstagram等）
+                            // TODO：vimeoの動画はサムネイル取得できるけどVideoViewで再生できない・・
                             continue;
                         }
                         List<Video> videos = videoPost.getVideos();
-                        for (Video video : videos) {
-                            String html = video.getEmbedCode();
-                            String[] a = html.split("src=");
-                            String[] b = a[1].split("\"");
-                            if (b[1].contains("www.youtube.com")) {
-                                // TODO：youtubeはvideoviewで再生できない。youtubeapiが必要
-                                // TODO：vineも無理。現段階で確認しているのはこの２つ
-                                // TODO：youtubeの場合そもそもvideo.getEmbededCode()で"false"が返る
-                                continue;
-                            }
+                        // videosの最後のvideoを取得（一番サイズが大きい）
+                        String html = videos.get(videos.size() - 1).getEmbedCode();
+                        String[] a = html.split("src=");
+                        String[] b = a[1].split("\"");
+                        if (!b[1].contains("www.youtube.com")) {
+                            // TODO：youtubeはvideoviewで再生できない。youtubeapiが必要
+                            // TODO：vineも無理。現段階で確認しているのはこの２つ
+                            // TODO：youtubeの場合そもそもvideo.getEmbededCode()で"false"が返る
                             Item item = new Item();
                             item.videoThumbnailUrl = videoPost.getThumbnailUrl();
                             item.videoUrl = b[1];
                             item.sourceBlogName = videoPost.getSourceTitle();
                             item.postId = String.valueOf(videoPost.getId());
                             subscriber.onNext(item);
-                            // 1つの動画に3つのサイズ(250,400,500)がある。暫定で一番小さいのを再生してbreak
-                            break;
                         }
                     }
                     subscriber.onCompleted();
