@@ -2,10 +2,8 @@ package jp.co.wakawaka.tumvie.historylist;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.VectorDrawable;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +18,7 @@ import jp.co.wakawaka.tumvie.R;
 import jp.co.wakawaka.tumvie.realm.History;
 
 /**
- * 動画リスト用Adapter
+ * 履歴リスト用Adapter
  * Created by wakabayashieisuke on 2016/07/07.
  */
 public class HistoryListViewAdapter extends BaseAdapter {

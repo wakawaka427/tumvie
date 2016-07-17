@@ -206,7 +206,7 @@ public class ListTabsActivity extends AppCompatActivity {
      * @param view View
      */
     public void onClickFavoriteDeleteButton(View view) {
-        ((FavoriteListFragment) sectionsPagerAdapter.getItem(Tab.FAVORITE.getValue())).deleteHistory((long) view.getTag());
+        ((FavoriteListFragment) sectionsPagerAdapter.getItem(Tab.FAVORITE.getValue())).deleteFavorite((long) view.getTag());
     }
 
     /**

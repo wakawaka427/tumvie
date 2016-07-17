@@ -1,6 +1,5 @@
 package jp.co.wakawaka.tumvie.historylist;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -15,7 +14,7 @@ import jp.co.wakawaka.tumvie.R;
 import jp.co.wakawaka.tumvie.realm.History;
 
 /**
- *
+ * 履歴リストのFragmentクラス
  */
 public class HistoryListFragment extends Fragment {
 

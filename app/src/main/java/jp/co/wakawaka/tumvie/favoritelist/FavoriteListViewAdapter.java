@@ -12,21 +12,20 @@ import android.widget.TextView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import java.util.List;
-
+import io.realm.RealmResults;
 import jp.co.wakawaka.tumvie.R;
 import jp.co.wakawaka.tumvie.realm.Favorite;
 
 /**
- * 動画リスト用Adapter
+ * お気に入りリスト用Adapter
  * Created by wakabayashieisuke on 2016/07/07.
  */
 public class FavoriteListViewAdapter extends BaseAdapter {
     Context context;
     LayoutInflater layoutInflater = null;
-    List<Favorite> favorites;
+    RealmResults<Favorite> favorites;
 
-    public FavoriteListViewAdapter(Context context, List<Favorite> favorites) {
+    public FavoriteListViewAdapter(Context context, RealmResults<Favorite> favorites) {
         this.context = context;
         this.layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.favorites = favorites;
