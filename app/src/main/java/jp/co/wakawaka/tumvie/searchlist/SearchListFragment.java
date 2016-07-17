@@ -64,6 +64,9 @@ public class SearchListFragment extends Fragment {
     private ProgressBar searchListProgress;
     private EditText searchKeywordEditText;
 
+    /** 検索実行時のキーワード */
+    private String searchKeyword;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -161,10 +164,11 @@ public class SearchListFragment extends Fragment {
 
         String keyword = String.valueOf(searchKeywordEditText.getText());
         if (keyword != null && !"".equals(keyword)) {
+            searchKeyword = keyword;
             Realm realm = Realm.getDefaultInstance();
             realm.beginTransaction();
             History history = realm.createObject(History.class);
-            history.setValue(keyword);
+            history.setValue(searchKeyword);
             realm.commitTransaction();
 
             adapter = new SearchListViewAdapter(searchList.getContext());
@@ -274,7 +278,7 @@ public class SearchListFragment extends Fragment {
                     options.put("type", CallbackActivity.POST_TYPE_VIDEO);
                     options.put("limit", LIMIT);
                     options.put("offset", offset);
-                    return requestBuilder.get("/blog/" + String.valueOf(searchKeywordEditText.getText()) + "/posts", options).getPosts();
+                    return requestBuilder.get("/blog/" + searchKeyword + "/posts", options).getPosts();
                 }
             }
     );
