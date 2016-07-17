@@ -35,6 +35,7 @@ import jp.co.wakawaka.tumvie.BuildConfig;
 import jp.co.wakawaka.tumvie.R;
 import jp.co.wakawaka.tumvie.activity.CallbackActivity;
 import jp.co.wakawaka.tumvie.listfragmenttest.Item;
+import jp.co.wakawaka.tumvie.realm.Favorite;
 import jp.co.wakawaka.tumvie.realm.History;
 import rx.Observable;
 import rx.Observer;
@@ -52,6 +53,7 @@ public class SearchListFragment extends Fragment {
     private InputMethodManager inputMethodManager;
     private CustomProgressDialog progressDialog;
     private Snackbar notFoundSnackBar;
+    private Snackbar addFavoriteSnackBar;
 
     private int offset = 0;
 
@@ -116,6 +118,8 @@ public class SearchListFragment extends Fragment {
     public void onFocusLoss() {
         dissmissKeyboard();
         dismissNotFoundSnackBar();
+        dismissAddFavoriteSnackBar();
+
     }
 
     /**
@@ -167,6 +171,21 @@ public class SearchListFragment extends Fragment {
             searchList.setAdapter(adapter);
             subscribeGetVideoList();
             dissmissKeyboard();
+        }
+    }
+
+    /**
+     * お気に入りに追加する。
+     */
+    public void addFavorite(Item item) {
+        // TODO；追加済みのidの場合何もせずreturnするようにする
+        if (item != null && !"".equals(item)) {
+            Realm realm = Realm.getDefaultInstance();
+            realm.beginTransaction();
+            Favorite favorite = realm.createObject(Favorite.class);
+            favorite.setValue(item.postId, item.sourceBlogName, item.videoThumbnailUrl, item.caption, item.videoUrl);
+            realm.commitTransaction();
+            showAddFavoriteSnackBar();
         }
     }
 
@@ -284,6 +303,32 @@ public class SearchListFragment extends Fragment {
         if (notFoundSnackBar != null) {
             notFoundSnackBar.dismiss();
             notFoundSnackBar = null;
+        }
+    }
+
+    /**
+     * お気に入りに追加した際に表示するsnackbar。
+     */
+    private void showAddFavoriteSnackBar() {
+        if (addFavoriteSnackBar == null) {
+            addFavoriteSnackBar = Snackbar.make(searchListLayout, getActivity().getString(R.string.add_favorite_message), Snackbar.LENGTH_LONG)
+                    .setAction(getActivity().getString(R.string.add_favorite_snack_bar_dissmiss_button), new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            addFavoriteSnackBar.dismiss();
+                        }
+                    });
+        }
+        addFavoriteSnackBar.show();
+    }
+
+    /**
+     * 検索結果がなかった場合のスナックバーを消す。
+     */
+    private void dismissAddFavoriteSnackBar() {
+        if (addFavoriteSnackBar != null) {
+            addFavoriteSnackBar.dismiss();
+            addFavoriteSnackBar = null;
         }
     }
 

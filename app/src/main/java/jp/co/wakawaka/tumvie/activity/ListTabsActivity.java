@@ -22,6 +22,7 @@ import jp.co.wakawaka.tumvie.R;
 import jp.co.wakawaka.tumvie.favoritelist.FavoriteListFragment;
 import jp.co.wakawaka.tumvie.historylist.HistoryListFragment;
 import jp.co.wakawaka.tumvie.listfragmenttest.Item;
+import jp.co.wakawaka.tumvie.realm.Favorite;
 import jp.co.wakawaka.tumvie.searchlist.SearchListFragment;
 
 public class ListTabsActivity extends AppCompatActivity {
@@ -85,6 +86,9 @@ public class ListTabsActivity extends AppCompatActivity {
             }
             @Override
             public void onPageSelected(int position) {
+                if (Tab.FAVORITE.getValue() == position) {
+                    ((FavoriteListFragment) sectionsPagerAdapter.getItem(position)).reloadList();
+                }
                 if (Tab.HISTOR.getValue() == position) {
                     ((HistoryListFragment) sectionsPagerAdapter.getItem(position)).reloadList();
                     fab.setVisibility(View.VISIBLE);
@@ -140,8 +144,12 @@ public class ListTabsActivity extends AppCompatActivity {
      * @param view View
      */
     public void onClickSearchListBlogName(View view) {
-        String keyword = String.valueOf(((TextView) view).getText());
-        ((SearchListFragment) sectionsPagerAdapter.getItem(Tab.SEARCH.getValue())).searchFromKeyword(keyword);
+        String blogName = String.valueOf(((TextView) view).getText());
+        if (blogName == null || "".equals(blogName)) {
+            // blogNameが存在しない場合何もせずreturn
+            return;
+        }
+        ((SearchListFragment) sectionsPagerAdapter.getItem(Tab.SEARCH.getValue())).searchFromKeyword(blogName);
     }
 
     /**
@@ -170,9 +178,46 @@ public class ListTabsActivity extends AppCompatActivity {
         ((SearchListFragment) sectionsPagerAdapter.getItem(Tab.SEARCH.getValue())).searchFromKeyword("");
     }
 
-
+    /**
+     * お気に入り追加ボタン
+     * @param view
+     */
     public void onClickSearchFavoriteButton(View view) {
+        Item item = (Item) view.getTag();
+        ((SearchListFragment) sectionsPagerAdapter.getItem(Tab.SEARCH.getValue())).addFavorite(item);
+    }
 
+    /**
+     * お気に入りのブログ名クリック処理
+     * @param view
+     */
+    public void onClickFavoriteListBlogName(View view) {
+        String blogName = String.valueOf(((TextView) view).getText());
+        if (blogName == null || "".equals(blogName)) {
+            // blogNameが存在しない場合何もせずreturn
+            return;
+        }
+        viewPager.setCurrentItem(Tab.SEARCH.getValue());
+        ((SearchListFragment) sectionsPagerAdapter.getItem(Tab.SEARCH.getValue())).searchFromKeyword(blogName);
+    }
+
+    /**
+     * お気に入り削除処理
+     * @param view View
+     */
+    public void onClickFavoriteDeleteButton(View view) {
+        ((FavoriteListFragment) sectionsPagerAdapter.getItem(Tab.FAVORITE.getValue())).deleteHistory((long) view.getTag());
+    }
+
+    /**
+     * ビデオ再生
+     * @param view View
+     */
+    public void onClickThumbnailFromFavorite(View view) {
+        Favorite favorite = (Favorite) view.getTag();
+        Intent intent = new Intent(this, VideoActivity.class);
+        intent.putExtra("videoUrl", favorite.getVideoUrl());
+        startActivity(intent);
     }
 
     /**

@@ -52,17 +52,6 @@ public class HistoryListFragment extends Fragment {
         historyList.setAdapter(historyListAdapter);
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
-    }
-
     /**
      * 指定した行を削除する。
      * @param id HistoryテーブルのID

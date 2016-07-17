@@ -14,4 +14,8 @@
     <string name="search_user_not_found">User not found.</string>
     <string name="search_video_not_found">User\'s video not found.</string>
     <string name="not_found_snack_bar_dissmiss_button">OK</string>
+    <string name="add_favorite_message">Add favorite.</string>
+    <string name="add_favorite_snack_bar_dissmiss_button">OK</string>
+    <string name="not_support_video_message">This file is not support.</string>
+    <string name="not_support_video_message_button">OK</string>
 </resources>

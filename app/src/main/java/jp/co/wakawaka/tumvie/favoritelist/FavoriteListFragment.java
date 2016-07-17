@@ -7,58 +7,24 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
+import io.realm.Realm;
+import io.realm.RealmResults;
+import io.realm.Sort;
 import jp.co.wakawaka.tumvie.R;
+import jp.co.wakawaka.tumvie.historylist.HistoryListViewAdapter;
+import jp.co.wakawaka.tumvie.realm.Favorite;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link FavoriteListFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link FavoriteListFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class FavoriteListFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    private OnFragmentInteractionListener mListener;
-
-    public FavoriteListFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment FavoriteListFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static FavoriteListFragment newInstance(String param1, String param2) {
-        FavoriteListFragment fragment = new FavoriteListFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private Realm realm;
+    private FavoriteListViewAdapter historyListAdapter;
+    private ListView favorites;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -68,28 +34,35 @@ public class FavoriteListFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_favorite_list, container, false);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+    public void reloadList() {
+        if (favorites == null) {
+            favorites = (ListView) getActivity().findViewById(R.id.favorite_list);
         }
+        if (realm == null) {
+            realm = Realm.getDefaultInstance();
+        }
+        RealmResults<Favorite> favorites = realm
+                .where(Favorite.class)
+                .findAllSorted("currentTimeMillis", Sort.DESCENDING);
+        historyListAdapter = new FavoriteListViewAdapter(this.favorites.getContext(), favorites);
+        this.favorites.setAdapter(historyListAdapter);
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
+    /**
+     * 指定した行を削除する。
+     * @param id HistoryテーブルのID
+     */
+    public void deleteHistory(final long id) {
+        if (realm == null) {
+            realm = Realm.getDefaultInstance();
+        }
+        realm.beginTransaction();
+        Favorite favorite = realm.where(Favorite.class).equalTo("id", id).findFirst();
+        if (favorite != null) {
+            favorite.deleteFromRealm();
+        }
+        realm.commitTransaction();
+        reloadList();
     }
 
     /**
