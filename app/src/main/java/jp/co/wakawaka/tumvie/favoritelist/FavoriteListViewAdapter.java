@@ -75,7 +75,7 @@ public class FavoriteListViewAdapter extends BaseAdapter {
         }
 
         ImageButton trashButton = (ImageButton) convertView.findViewById(R.id.favorite_trash_button);
-        trashButton .setTag(favorite.getId());
+        trashButton.setTag(favorite.getId());
 
         return convertView;
     }

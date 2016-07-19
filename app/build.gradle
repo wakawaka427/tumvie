@@ -45,4 +45,5 @@ dependencies {
     //compile 'com.android.support:recyclerview-v7:23.4.0'
     //compile 'com.github.thorbenprimke:realm-recyclerview:0.9.23'
     //compile 'com.github.orangegangsters:swipy:1.2.3@aar'
+    compile 'io.realm:android-adapters:1.2.1'
 }
