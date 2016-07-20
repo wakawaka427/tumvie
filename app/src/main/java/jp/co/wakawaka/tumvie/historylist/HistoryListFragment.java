@@ -65,6 +65,6 @@ public class HistoryListFragment extends Fragment {
             history.deleteFromRealm();
         }
         realm.commitTransaction();
-        reloadList();
+        historyListAdapter.notifyDataSetChanged();
     }
 }

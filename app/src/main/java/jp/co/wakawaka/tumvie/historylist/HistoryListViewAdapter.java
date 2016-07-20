@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import io.realm.RealmBaseAdapter;
+import io.realm.RealmResults;
 import jp.co.wakawaka.tumvie.R;
 import jp.co.wakawaka.tumvie.realm.History;
 
@@ -21,16 +23,11 @@ import jp.co.wakawaka.tumvie.realm.History;
  * 履歴リスト用Adapter
  * Created by wakabayashieisuke on 2016/07/07.
  */
-public class HistoryListViewAdapter extends BaseAdapter {
-    Context context;
-    LayoutInflater layoutInflater;
-    List<History> histories;
+public class HistoryListViewAdapter extends RealmBaseAdapter<History> {
     Bitmap iconTrash;
 
-    public HistoryListViewAdapter(Context context, List<History> histories) {
-        this.context = context;
-        this.layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.histories = histories;
+    public HistoryListViewAdapter(Context context, RealmResults<History> histories) {
+        super(context, histories);
         Drawable vectorDrawable = ContextCompat.getDrawable(context, R.drawable.icon_trash);
         Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(),
                 vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
@@ -41,25 +38,10 @@ public class HistoryListViewAdapter extends BaseAdapter {
     }
 
     @Override
-    public int getCount() {
-        return histories.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return histories.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return histories.get(position).getId();
-    }
-
-    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null) {
-            convertView = layoutInflater.inflate(R.layout.fragment_history_list_item, null);
+            convertView = inflater.inflate(R.layout.fragment_history_list_item, parent, false);
             holder = new ViewHolder();
             holder.historySearchKeyword = (TextView) convertView.findViewById(R.id.history_search_keyword);
             holder.trashButton = (ImageButton) convertView.findViewById(R.id.history_trash_button);
@@ -69,14 +51,14 @@ public class HistoryListViewAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        final History history = (History) getItem(position);
+        final History history = getItem(position);
         holder.historySearchKeyword.setText(history.getKeyword());
         holder.trashButton.setTag(history.getId());
 
         return convertView;
     }
 
-    private class ViewHolder {
+    private static class ViewHolder {
         private TextView historySearchKeyword;
         private ImageButton trashButton;
     }

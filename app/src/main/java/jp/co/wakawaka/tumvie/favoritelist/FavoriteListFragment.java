@@ -65,7 +65,6 @@ public class FavoriteListFragment extends Fragment {
             favorite.deleteFromRealm();
         }
         realm.commitTransaction();
-//        reloadList();
         favoriteListAdapter.notifyDataSetChanged();
     }
 }
