@@ -13,6 +13,7 @@
         android:paddingStart="16dp"
         android:layout_weight="1"
         android:layout_gravity="center_vertical"
+        android:textColor="@color/clickable_text_color"
         android:onClick="onClickHistorySearchKeyword"/>
 
     <ImageButton
