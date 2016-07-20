@@ -1,4 +1,4 @@
-package jp.co.wakawaka.tumvie.realm;
+package jp.co.wakawaka.tumvie.favoritelist;
 
 import io.realm.Realm;
 import io.realm.RealmObject;

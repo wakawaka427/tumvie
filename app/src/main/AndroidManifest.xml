@@ -13,22 +13,7 @@
         android:theme="@style/AppTheme">
         <meta-data android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-        <activity
-            android:name=".activity.MainActivity"
-            android:theme="@style/AppThemeNoActionBar"></activity>
-        <activity android:name=".activity.CallbackActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="tumblrclient" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".activity.ListActivity"
-            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activity.ListTabsActivity"
             android:label="@string/title_activity_list_tabs"

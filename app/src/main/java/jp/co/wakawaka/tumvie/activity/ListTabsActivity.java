@@ -21,11 +21,21 @@ import io.realm.RealmConfiguration;
 import jp.co.wakawaka.tumvie.R;
 import jp.co.wakawaka.tumvie.favoritelist.FavoriteListFragment;
 import jp.co.wakawaka.tumvie.historylist.HistoryListFragment;
-import jp.co.wakawaka.tumvie.listfragmenttest.Item;
-import jp.co.wakawaka.tumvie.realm.Favorite;
+import jp.co.wakawaka.tumvie.searchlist.Item;
+import jp.co.wakawaka.tumvie.favoritelist.Favorite;
 import jp.co.wakawaka.tumvie.searchlist.SearchListFragment;
 
 public class ListTabsActivity extends AppCompatActivity {
+
+    // TODO：どっかに移す
+    public static final String POST_TYPE_TEXT = "text";     //テキスト
+    public static final String POST_TYPE_QUOTE = "quote";   //引用
+    public static final String POST_TYPE_PHOTO = "photo";   //画像
+    public static final String POST_TYPE_LINK = "link";     //リンク
+    public static final String POST_TYPE_CHAT = "chat";     //チャット
+    public static final String POST_TYPE_AUDIO = "audio";   //音声
+    public static final String POST_TYPE_VIDEO = "video";   //動画
+    public static final String POST_TYPE_ANSWER = "answer"; //アンサー
 
     private enum Tab {
         FAVORITE(0),

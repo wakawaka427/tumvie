@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jp.co.wakawaka.tumvie.R;
-import jp.co.wakawaka.tumvie.listfragmenttest.Item;
 
 /**
  * 動画リスト用Adapter

@@ -11,7 +11,6 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
 import jp.co.wakawaka.tumvie.R;
-import jp.co.wakawaka.tumvie.realm.History;
 
 /**
  * 履歴リストのFragmentクラス

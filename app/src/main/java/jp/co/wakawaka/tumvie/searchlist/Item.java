@@ -1,4 +1,4 @@
-package jp.co.wakawaka.tumvie.listfragmenttest;
+package jp.co.wakawaka.tumvie.searchlist;
 
 import android.graphics.Bitmap;
 

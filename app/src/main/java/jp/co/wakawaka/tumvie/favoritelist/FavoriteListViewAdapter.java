@@ -1,10 +1,8 @@
 package jp.co.wakawaka.tumvie.favoritelist;
 
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,7 +13,6 @@ import com.squareup.picasso.Picasso;
 import io.realm.RealmBaseAdapter;
 import io.realm.RealmResults;
 import jp.co.wakawaka.tumvie.R;
-import jp.co.wakawaka.tumvie.realm.Favorite;
 
 /**
  * お気に入りリスト用Adapter

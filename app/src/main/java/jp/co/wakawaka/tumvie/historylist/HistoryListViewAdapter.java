@@ -5,19 +5,14 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
-
-import java.util.List;
 
 import io.realm.RealmBaseAdapter;
 import io.realm.RealmResults;
 import jp.co.wakawaka.tumvie.R;
-import jp.co.wakawaka.tumvie.realm.History;
 
 /**
  * 履歴リスト用Adapter
