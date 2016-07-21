@@ -267,6 +267,12 @@ public class SearchListFragment extends Fragment {
                             item.sourceBlogName = videoPost.getSourceTitle();
                             item.postId = String.valueOf(videoPost.getId());
                             subscriber.onNext(item);
+                            Realm realm = Realm.getDefaultInstance();
+                            realm.beginTransaction();
+                            Favorite favorite = realm.where(Favorite.class).equalTo("postId", item.postId).findFirst();
+                            
+                            realm.commitTransaction();
+                            showAddFavoriteSnackBar();
                         }
                     }
                     subscriber.onCompleted();
