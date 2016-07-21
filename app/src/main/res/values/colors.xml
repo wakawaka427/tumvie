@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimaryLight">#7986CB</color>
-    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimary">#36465D</color>
+    <color name="colorPrimaryDark">#273343</color>
+    <color name="colorAccent">#6280A9</color>
 
-    <color name="colorPrimaryDark">#6C1B1F</color>
-    <color name="colorAccent">#FF727A</color>
-
-    <color name="clickable_text_color">#216286</color>
+    <color name="clickable_text_color">#6280A9</color>
     <color name="gray">#808080</color>
-    <color name="theme_color">#b94047</color>
-    <color name="tab_icon">#e9dfe5</color>
-    <color name="fragment_icon">#3f312b</color>
+    <color name="tab_icon">#ffffff</color>
+    <color name="fragment_icon">#000000</color>
     <color name="tumblr_official_color">#36465D</color>
 </resources>

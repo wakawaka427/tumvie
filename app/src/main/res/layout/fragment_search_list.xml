@@ -33,6 +33,7 @@
             android:background="@null"
             android:onClick="onClickSearchKeywordDeleteButton"
             android:src="@drawable/icon_delete"
+            android:tint="@color/gray"
             android:layout_gravity="end|center_vertical"/>
 
     </FrameLayout>

@@ -11,9 +11,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import io.realm.Realm;
@@ -120,11 +122,16 @@ public class ListTabsActivity extends AppCompatActivity {
 
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
-        tabLayout.getTabAt(Tab.FAVORITE.getValue()).setIcon(R.drawable.icon_favorite);
-        tabLayout.getTabAt(Tab.SEARCH.getValue()).setIcon(R.drawable.icon_search);
-        tabLayout.getTabAt(Tab.HISTORY.getValue()).setIcon(R.drawable.icon_history);
+        tabLayout.getTabAt(Tab.FAVORITE.getValue()).setCustomView(getTabImage(R.drawable.icon_favorite));
+        tabLayout.getTabAt(Tab.SEARCH.getValue()).setCustomView(getTabImage(R.drawable.icon_search));
+        tabLayout.getTabAt(Tab.HISTORY.getValue()).setCustomView(getTabImage(R.drawable.icon_history));
     }
 
+    private ImageView getTabImage(int tabIconId) {
+        ImageView tab = (ImageView) LayoutInflater.from(this).inflate(R.layout.tab_icon, null);
+        tab.setImageResource(tabIconId);
+        return tab;
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

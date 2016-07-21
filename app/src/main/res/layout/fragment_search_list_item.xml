@@ -26,7 +26,8 @@
             android:padding="8dp"
             android:scaleType="fitXY"
             android:background="@null"
-            android:src="@drawable/icon_favorite"
+            android:src="@drawable/icon_favorite_search_list"
+            android:tint="@color/fragment_icon"
             android:onClick="onClickSearchFavoriteButton"/>
     </LinearLayout>
 
