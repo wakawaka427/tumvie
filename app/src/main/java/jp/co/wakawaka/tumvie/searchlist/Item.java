@@ -13,4 +13,5 @@ public class Item {
     public String videoThumbnailUrl;
     public String caption;
     public String videoUrl;
+    public boolean isFavorite;
 }

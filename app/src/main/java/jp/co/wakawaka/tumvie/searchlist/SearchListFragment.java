@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.realm.Realm;
+import io.realm.RealmResults;
 import jp.co.wakawaka.tumvie.BuildConfig;
 import jp.co.wakawaka.tumvie.R;
 import jp.co.wakawaka.tumvie.activity.ListTabsActivity;
@@ -190,7 +191,25 @@ public class SearchListFragment extends Fragment {
             Favorite favorite = realm.createObject(Favorite.class);
             favorite.setValue(item.postId, item.sourceBlogName, item.videoThumbnailUrl, item.caption, item.videoUrl);
             realm.commitTransaction();
-            showAddFavoriteSnackBar();
+            adapter.notifyDataSetChanged();
+//            showAddFavoriteSnackBar();
+        }
+    }
+
+    // うまく動かん
+    public void deleteFavorite(Item item) {
+        if (item != null && !"".equals(item)) {
+            Realm realm = Realm.getDefaultInstance();
+            if (realm == null) {
+                realm = Realm.getDefaultInstance();
+            }
+            realm.beginTransaction();
+            Favorite favorite = realm.where(Favorite.class).equalTo("postId", item.postId).findFirst();
+            if (favorite != null) {
+                favorite.deleteFromRealm();
+            }
+            realm.commitTransaction();
+            adapter.notifyDataSetChanged();
         }
     }
 
@@ -269,10 +288,14 @@ public class SearchListFragment extends Fragment {
                             subscriber.onNext(item);
                             Realm realm = Realm.getDefaultInstance();
                             realm.beginTransaction();
-                            Favorite favorite = realm.where(Favorite.class).equalTo("postId", item.postId).findFirst();
+                            RealmResults<Favorite> favorites = realm.where(Favorite.class).equalTo("postId", item.postId).findAll();
+                            if (favorites.size() > 0) {
+                                item.isFavorite = true;
+                            } else {
+                                item.isFavorite = false;
+                            }
                             
                             realm.commitTransaction();
-                            showAddFavoriteSnackBar();
                         }
                     }
                     subscriber.onCompleted();

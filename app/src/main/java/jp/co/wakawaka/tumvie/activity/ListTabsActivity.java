@@ -204,6 +204,15 @@ public class ListTabsActivity extends AppCompatActivity {
     }
 
     /**
+     * お気に入り追加済みボタン
+     * @param view
+     */
+    public void onClickSearchWasFavoriteButton(View view) {
+//        Item item = (Item) view.getTag();
+//        ((SearchListFragment) sectionsPagerAdapter.getItem(Tab.SEARCH.getValue())).deleteFavorite(item);
+    }
+
+    /**
      * お気に入りのブログ名クリック処理
      * @param view
      */

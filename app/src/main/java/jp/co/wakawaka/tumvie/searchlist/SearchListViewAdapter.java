@@ -1,6 +1,10 @@
 package jp.co.wakawaka.tumvie.searchlist;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,7 +85,16 @@ public class SearchListViewAdapter extends BaseAdapter {
         }
 
         ImageButton favoriteButton = (ImageButton) convertView.findViewById(R.id.search_favorite_button);
-        favoriteButton.setTag(item);
+        ImageButton wasFavoriteButton = (ImageButton) convertView.findViewById(R.id.search_was_favorite_button);
+        if (item.isFavorite) {
+            favoriteButton.setVisibility(View.GONE);
+            wasFavoriteButton.setVisibility(View.VISIBLE);
+            wasFavoriteButton.setTag(item);
+        } else {
+            favoriteButton.setVisibility(View.VISIBLE);
+            wasFavoriteButton.setVisibility(View.GONE);
+            favoriteButton.setTag(item);
+        }
 
         return convertView;
     }
