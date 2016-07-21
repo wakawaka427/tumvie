@@ -9,5 +9,6 @@
     <color name="gray">#808080</color>
     <color name="tab_icon">#ffffff</color>
     <color name="fragment_icon">#000000</color>
+    <color name="favorite_done_color">#D95E40</color>
     <color name="tumblr_official_color">#36465D</color>
 </resources>

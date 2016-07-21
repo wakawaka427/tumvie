@@ -128,7 +128,7 @@ public class ListTabsActivity extends AppCompatActivity {
     }
 
     private ImageView getTabImage(int tabIconId) {
-        ImageView tab = (ImageView) LayoutInflater.from(this).inflate(R.layout.tab_icon, null);
+        ImageView tab = (ImageView) LayoutInflater.from(this).inflate(R.layout.icon_tab_layout, null);
         tab.setImageResource(tabIconId);
         return tab;
     }
