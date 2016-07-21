@@ -2,11 +2,14 @@
 <resources>
     <color name="colorPrimaryLight">#7986CB</color>
     <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
-    <color name="clickable_text_color">#1A58C0</color>
 
+    <color name="colorPrimaryDark">#6C1B1F</color>
+    <color name="colorAccent">#FF727A</color>
+
+    <color name="clickable_text_color">#216286</color>
     <color name="gray">#808080</color>
     <color name="theme_color">#b94047</color>
+    <color name="tab_icon">#e9dfe5</color>
+    <color name="fragment_icon">#3f312b</color>
     <color name="tumblr_official_color">#36465D</color>
 </resources>

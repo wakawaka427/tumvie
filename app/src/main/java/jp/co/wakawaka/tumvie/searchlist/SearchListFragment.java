@@ -133,14 +133,16 @@ public class SearchListFragment extends Fragment {
         searchKeywordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_SEARCH ||
-                        i == EditorInfo.IME_ACTION_DONE ||
-                        keyEvent.getAction() == KeyEvent.ACTION_DOWN &&
-                                keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                    if (!keyEvent.isShiftPressed()) {
-                        searchFromText();
-                        return true;
-                    }
+                if (i == EditorInfo.IME_ACTION_SEARCH
+                        || i == EditorInfo.IME_ACTION_DONE) {
+                    searchFromText();
+                    return true;
+                } else if (keyEvent != null
+                        && keyEvent.getAction() == KeyEvent.ACTION_DOWN
+                        && keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER
+                        && !keyEvent.isShiftPressed()) {
+                    searchFromText();
+                    return true;
                 }
                 return false;
             }

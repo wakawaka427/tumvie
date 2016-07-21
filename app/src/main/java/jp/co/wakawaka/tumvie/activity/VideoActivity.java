@@ -23,7 +23,7 @@ public class VideoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_video);
 
         final CustomProgressDialog progressDialog = new CustomProgressDialog(this);
-        progressDialog.setCancelable(false);
+        progressDialog.setCancelable(true);
 
         progressDialog.show();
         String videoUrl = getIntent().getStringExtra("videoUrl");
