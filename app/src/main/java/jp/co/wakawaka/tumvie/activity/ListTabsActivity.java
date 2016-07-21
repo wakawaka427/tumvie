@@ -40,7 +40,7 @@ public class ListTabsActivity extends AppCompatActivity {
     private enum Tab {
         FAVORITE(0),
         SEARCH(1),
-        HISTOR(2);
+        HISTORY(2);
         private final int id;
         Tab(final int id) {
             this.id = id;
@@ -99,7 +99,7 @@ public class ListTabsActivity extends AppCompatActivity {
                 if (Tab.FAVORITE.getValue() == position) {
                     ((FavoriteListFragment) sectionsPagerAdapter.getItem(position)).reloadList();
                 }
-                if (Tab.HISTOR.getValue() == position) {
+                if (Tab.HISTORY.getValue() == position) {
                     ((HistoryListFragment) sectionsPagerAdapter.getItem(position)).reloadList();
                     fab.setVisibility(View.VISIBLE);
                 } else {
@@ -119,11 +119,10 @@ public class ListTabsActivity extends AppCompatActivity {
         viewPager.setCurrentItem(Tab.SEARCH.getValue());
 
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        tabLayout.setTabsFromPagerAdapter(sectionsPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.getTabAt(Tab.FAVORITE.getValue()).setIcon(R.drawable.icon_favorite);
         tabLayout.getTabAt(Tab.SEARCH.getValue()).setIcon(R.drawable.icon_search);
-        tabLayout.getTabAt(Tab.HISTOR.getValue()).setIcon(R.drawable.icon_history);
+        tabLayout.getTabAt(Tab.HISTORY.getValue()).setIcon(R.drawable.icon_history);
     }
 
 
@@ -177,7 +176,7 @@ public class ListTabsActivity extends AppCompatActivity {
      * @param view View
      */
     public void onClickHistoryDeleteButton(View view) {
-        ((HistoryListFragment) sectionsPagerAdapter.getItem(Tab.HISTOR.getValue())).deleteHistory((long) view.getTag());
+        ((HistoryListFragment) sectionsPagerAdapter.getItem(Tab.HISTORY.getValue())).deleteHistory((long) view.getTag());
     }
 
     /**

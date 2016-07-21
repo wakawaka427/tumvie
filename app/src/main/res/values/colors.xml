@@ -5,4 +5,8 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="clickable_text_color">#1A58C0</color>
+
+    <color name="gray">#808080</color>
+    <color name="theme_color">#b94047</color>
+    <color name="tumblr_official_color">#36465D</color>
 </resources>

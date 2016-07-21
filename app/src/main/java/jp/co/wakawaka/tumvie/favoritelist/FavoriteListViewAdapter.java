@@ -7,6 +7,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.internal.fa;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -45,6 +46,7 @@ public class FavoriteListViewAdapter extends RealmBaseAdapter<Favorite> {
                 // TODO：No thumbnailみたいな画像をここで表示する
             }
         });
+        thumbnailImageView.setTag(favorite);
 
         ImageButton trashButton = (ImageButton) convertView.findViewById(R.id.favorite_trash_button);
         trashButton.setTag(favorite.getId());

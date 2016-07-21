@@ -1,9 +1,8 @@
 <resources>
-    <string name="app_name">tumvie</string>
+    <string name="app_name">Tumvie</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="title_activity_list_tabs">ListTabsActivity</string>
-    <string name="title_application_name">tumvie</string>
     <string name="action_settings">Settings</string>
     <string name="network_error_message">Network failed.</string>
     <string name="search_keyword_edit_text_label">User</string>
