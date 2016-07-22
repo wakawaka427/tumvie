@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="license_title">Open Source License</string>
+    <string name="license_body">This application uses open source components.\nYou can find the source code and license information of these open source projects.</string>
+    <string name="license_jumblr_title">Jumblr.</string>
+    <string name="license_jumblr_body">Copyright 2015 Tumblr, Inc.\nProject: https://github.com/tumblr/jumblr\nLicense: Apache License, Version 2.0</string>
+    <string name="license_picasso_title">Picasso</string>
+    <string name="license_picasso_body">Copyright 2013 Square, Inc.\nProject: https://github.com/square/picasso\nLicense: Apache License, Version 2.0</string>
+    <string name="license_rxandroid_title">RxAndroid</string>
+    <string name="license_rxandroid_body">Copyright 2015 The RxAndroid authors\nProject: https://github.com/ReactiveX/RxAndroid\nLicense: Apache License, Version 2.0</string>
+    <string name="license_realmjava_title">Realm Java</string>
+    <string name="license_realmjava_body">Project: https://github.com/realm/realm-java\nLicense: Apache License, Version 2.0</string>
+    <string name="license_realmandroidadapter_title">Realm Android Adapters</string>
+    <string name="license_realmandroidadapter_body">Project: https://github.com/realm/realm-android-adapters\nLicense: Apache License, Version 2.0</string>
+
+</resources>

@@ -14,12 +14,27 @@
         >
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="100dp"
-            android:text="aaaaa"
-            android:gravity="center_horizontal" />
+            android:text="@string/setting_title_terms"
+            android:id="@+id/textView"
+            android:textColor="@color/clickable_text_color"
+            android:textSize="@dimen/text_size_ss"
+            android:layout_marginStart="8dp"
+            android:padding="8dp"
+            android:onClick="onClickTerms"
+            />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/setting_title_license"
+            android:id="@+id/license"
+            android:textColor="@color/clickable_text_color"
+            android:textSize="@dimen/text_size_ss"
+            android:layout_marginStart="8dp"
+            android:padding="8dp"
+            android:onClick="onClickLicense"/>
     </LinearLayout>
 
 </LinearLayout>

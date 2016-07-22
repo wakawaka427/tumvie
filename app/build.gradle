@@ -17,12 +17,17 @@ android {
             buildConfigField "String", "CONSUMER_KEY", "\"${project.property("tumblrConsumerKey")}\""
             buildConfigField "String", "CONSUMER_SECRET", "\"${project.property("tumblrConsumerSecret")}\""
             buildConfigField "String", "TUMBLR_OAUTH_URL", "\"${project.property("tumblrOAuthUrl")}\""
+            debuggable true         // デバッグモードか
+            zipAlignEnabled true    // zip圧縮を行うか
+            minifyEnabled false     // 難読化を行うか
         }
         release {
             buildConfigField "String", "CONSUMER_KEY", "\"${project.property("tumblrConsumerKey")}\""
             buildConfigField "String", "CONSUMER_SECRET", "\"${project.property("tumblrConsumerSecret")}\""
             buildConfigField "String", "TUMBLR_OAUTH_URL", "\"${project.property("tumblrOAuthUrl")}\""
-            minifyEnabled false
+            debuggable false
+            zipAlignEnabled true
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -31,19 +36,19 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
+//    compile 'com.google.android.exoplayer:exoplayer:r1.5.9'
     compile 'com.google.android.gms:play-services:6.+'
     compile 'com.android.support:appcompat-v7:23.4.0'
-    compile 'com.android.support:design:23.4.0'
     compile 'com.android.support:customtabs:23.4.0'
-    //compile 'com.squareup.okhttp3:okhttp:3.3.1'
-    //compile 'com.squareup.retrofit2:retrofit:2.1.0'
-    compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'io.reactivex:rxandroid:1.2.1'
-    compile 'com.tumblr:jumblr:0.0.11'
-//    compile 'com.google.android.exoplayer:exoplayer:r1.5.9'
+    compile 'com.android.support:design:23.4.0'
     compile 'com.android.support:support-v4:23.4.0'
     //compile 'com.android.support:recyclerview-v7:23.4.0'
+    //compile 'com.squareup.okhttp3:okhttp:3.3.1'
+    //compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.tumblr:jumblr:0.0.11'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'io.reactivex:rxandroid:1.2.1'
+    compile 'io.realm:android-adapters:1.2.1'
     //compile 'com.github.thorbenprimke:realm-recyclerview:0.9.23'
     //compile 'com.github.orangegangsters:swipy:1.2.3@aar'
-    compile 'io.realm:android-adapters:1.2.1'
 }

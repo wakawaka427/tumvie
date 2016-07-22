@@ -27,8 +27,15 @@
         <activity
             android:name=".activity.VideoActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.SettingActivity"
-            android:theme="@style/AppTheme.NoActionBar.TranslucentBackground" ></activity>
+        <activity
+            android:name=".activity.SettingActivity"
+            android:theme="@style/AppTheme.NoActionBar.TranslucentBackground" />
+        <activity
+            android:name=".activity.LicenseActivity"
+            android:theme="@style/AppTheme.NoActionBar.TranslucentBackground" />
+        <activity
+            android:name=".activity.TermsActivity"
+            android:theme="@style/AppTheme.NoActionBar.TranslucentBackground" />
     </application>
 
 </manifest>

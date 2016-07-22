@@ -15,4 +15,6 @@
     <string name="add_favorite_snack_bar_dissmiss_button">OK</string>
     <string name="not_support_video_message">This file is not support.</string>
     <string name="not_support_video_message_button">OK</string>
+    <string name="setting_title_license">License</string>
+    <string name="setting_title_terms">Terms of App</string>
 </resources>

@@ -15,3 +15,24 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+-dontwarn com.google.**
+-dontwarn android.os.**
+-dontwarn android.support.v4.**
+
+# for picasso
+-dontwarn com.squareup.okhttp.**
+
+# for rxAndroid¥
+-dontwarn sun.misc.Unsafe
+-keepclassmembers class rx.internal.util.unsafe.*ArrayQueue*Field* {
+   long producerIndex;
+   long consumerIndex;
+}
+-keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueProducerNodeRef {
+   long producerNode;
+   long consumerNode;
+}
+
+
+-printmapping mapping.txt
