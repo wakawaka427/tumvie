@@ -11,4 +11,6 @@
     <color name="fragment_icon">#000000</color>
     <color name="favorite_done_color">#D95E40</color>
     <color name="tumblr_official_color">#36465D</color>
+
+    <color name="transparameter">#30000000</color>
 </resources>

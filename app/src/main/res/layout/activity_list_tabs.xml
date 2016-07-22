@@ -33,11 +33,13 @@
     </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/setting_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@android:drawable/ic_dialog_email" />
+        android:tint="@color/tab_icon"
+        android:src="@drawable/icon_setting"
+        android:onClick="onClickSettingButton"/>
 
 </android.support.design.widget.CoordinatorLayout>

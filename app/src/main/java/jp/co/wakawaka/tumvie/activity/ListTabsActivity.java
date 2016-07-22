@@ -2,7 +2,6 @@ package jp.co.wakawaka.tumvie.activity;
 
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 
@@ -76,14 +75,7 @@ public class ListTabsActivity extends AppCompatActivity {
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this).build();
         Realm.setDefaultConfiguration(realmConfiguration);
 
-        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.setting_button);
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -153,6 +145,14 @@ public class ListTabsActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * 設定ボタンクリック処理
+     * @param view View
+     */
+    public void onClickSettingButton(View view) {
+        startActivity(new Intent(this, SettingActivity.class));
     }
 
     /**
